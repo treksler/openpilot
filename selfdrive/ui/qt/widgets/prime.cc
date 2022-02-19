@@ -161,7 +161,7 @@ PrimeUserWidget::PrimeUserWidget(QWidget* parent) : QWidget(parent) {
   if (auto dongleId = getDongleId()) {
     QString url = CommaApi::BASE_URL + "/v1/devices/" + *dongleId + "/owner";
     RequestRepeater *repeater = new RequestRepeater(this, url, "ApiCache_Owner", 6);
-    QObject::connect(repeater, &RequestRepeater::receivedResponse, this, &PrimeUserWidget::replyFinished);
+    QObject::connect(repeater, &RequestRepeater::requestDone, this, &PrimeUserWidget::replyFinished);
   }
 }
 
@@ -291,14 +291,14 @@ SetupWidget::SetupWidget(QWidget* parent) : QFrame(parent) {
     QString url = CommaApi::BASE_URL + "/v1.1/devices/" + *dongleId + "/";
     RequestRepeater* repeater = new RequestRepeater(this, url, "ApiCache_Device", 5);
 
-    QObject::connect(repeater, &RequestRepeater::failedResponse, this, &SetupWidget::show);
-    QObject::connect(repeater, &RequestRepeater::receivedResponse, this, &SetupWidget::replyFinished);
+    QObject::connect(repeater, &RequestRepeater::requestDone, this, &SetupWidget::replyFinished);
   }
   hide(); // Only show when first request comes back
 }
 
-void SetupWidget::replyFinished(const QString &response) {
+void SetupWidget::replyFinished(const QString &response, bool success) {
   show();
+  if (!success) return;
 
   QJsonDocument doc = QJsonDocument::fromJson(response.toUtf8());
   if (doc.isNull()) {
@@ -307,14 +307,22 @@ void SetupWidget::replyFinished(const QString &response) {
   }
 
   QJsonObject json = doc.object();
+  int prime_type = json["prime_type"].toInt();
+
+  if (uiState()->prime_type != prime_type) {
+    uiState()->prime_type = prime_type;
+    Params().put("PrimeType", std::to_string(prime_type));
+  }
+
   if (!json["is_paired"].toBool()) {
     mainLayout->setCurrentIndex(0);
   } else {
     popup->reject();
-    if (!json["prime"].toBool()) {
-      mainLayout->setCurrentWidget(primeAd);
-    } else {
+
+    if (prime_type) {
       mainLayout->setCurrentWidget(primeUser);
+    } else {
+      mainLayout->setCurrentWidget(primeAd);
     }
   }
 }

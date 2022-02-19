@@ -12,7 +12,7 @@
 #define USERDATA "/dev/disk/by-partlabel/userdata"
 
 void Reset::doReset() {
-  // best effort to wipe nvme
+  // best effort to wipe nvme and sd card
   std::system("sudo umount " NVME);
   std::system("yes | sudo mkfs.ext4 " NVME);
 
