@@ -115,7 +115,7 @@ class UIState : public QObject {
 public:
   UIState(QObject* parent = 0);
   void updateStatus();
-  inline bool worldObjectsVisible() const { 
+  inline bool worldObjectsVisible() const {
     return sm->rcv_frame("liveCalibration") > scene.started_frame;
   };
 
@@ -127,7 +127,7 @@ public:
   UIScene scene = {};
 
   bool awake;
-  bool has_prime = false;
+  int prime_type = 0;
 
   QTransform car_space_transform;
   bool wide_camera;
@@ -141,7 +141,7 @@ private slots:
 
 private:
   QTimer *timer;
-  bool started_prev = true;
+  bool started_prev = false;
 };
 
 UIState *uiState();
