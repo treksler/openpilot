@@ -12,6 +12,7 @@ from selfdrive.car.fingerprints import FW_VERSIONS, get_attr_from_cars
 from selfdrive.car.isotp_parallel_query import IsoTpParallelQuery
 from selfdrive.car.toyota.values import CAR as TOYOTA
 from selfdrive.swaglog import cloudlog
+from common.params import Params
 
 Ecu = car.CarParams.Ecu
 
@@ -379,14 +380,12 @@ if __name__ == "__main__":
   print()
 
   t = time.time()
+
+  if Params().get_bool("FirmwareQueryDelay"):
+    time.sleep(10.)
   fw_vers = get_fw_versions(logcan, sendcan, 1, extra=extra, debug=args.debug, progress=True)
   _, candidates = match_fw_to_car(fw_vers)
 
-  if candidates == set():
-    cloudlog.warning("No matching candidates found, retrying fingerprinting")
-    time.sleep(10.)
-    fw_vers = get_fw_versions(logcan, sendcan, 1, extra=extra, debug=args.debug, progress=True)
-    _, candidates = match_fw_to_car(fw_vers)
 
   print()
   print("Found FW versions")
