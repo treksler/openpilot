@@ -101,6 +101,8 @@ def fingerprint(logcan, sendcan):
       car_fw = list(cached_params.carFw)
     else:
       cloudlog.warning("Getting VIN & FW versions")
+      if Params().get_bool("FirmwareQueryDelay"):
+        time.sleep(10)
       _, vin = get_vin(logcan, sendcan, bus)
       car_fw = get_fw_versions(logcan, sendcan, bus)
 
@@ -169,11 +171,6 @@ def fingerprint(logcan, sendcan):
 
 def get_car(logcan, sendcan):
   candidate, fingerprints, vin, car_fw, source, exact_match = fingerprint(logcan, sendcan)
-
-  if candidate is None:
-    cloudlog.warning("no matching fingerprints, retrying: : %r", fingerprints)
-    time.sleep(10)
-    candidate, fingerprints, vin, car_fw, source, exact_match = fingerprint(logcan, sendcan)
 
   if candidate is None:
     cloudlog.warning("car doesn't match any fingerprints: %r", fingerprints)

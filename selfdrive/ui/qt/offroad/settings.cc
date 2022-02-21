@@ -65,6 +65,12 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "In this mode openpilot will ignore lanelines and just drive how it thinks a human would.",
       "../assets/offroad/icon_road.png",
     },
+    {
+      "FirmwareQueryDelay",
+      "Firmware query delay",
+      "Add 10 second delay before running FPv2 ECU firmware queries. May be needed for Subaru pre-global models",
+      "../assets/offroad/icon_speed_limit.png",
+    },
 #ifdef ENABLE_MAPS
     {
       "NavSettingTime24h",
