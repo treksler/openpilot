@@ -104,6 +104,7 @@ FW_VERSIONS = {
       b'\000\000e\002\037@ \024',
       b'\x00\x00d)\x00\x00\x00\x00',
       b'\x00\x00c\xf4\x00\x00\x00\x00',
+      b'\x00\x00dd\x00\x00\x00\x00',
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xaa\x61\x66\x73\x07',
@@ -123,6 +124,7 @@ FW_VERSIONS = {
       b'\xaa\x00Bu\x07',
       b'\xc5!dr\x07',
       b'\xaa!aw\x07',
+      b'\xaaaft\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xe3\xe5\x46\x31\x00',
@@ -139,6 +141,7 @@ FW_VERSIONS = {
       b'\xe3\xd0\x081\x00',
       b'\xe3\xf5\x06\x00\x00',
       b'\xf1\x00\xa4\x10@',
+      b'\xe3\xe5D1\x00',
     ],
   },
   CAR.IMPREZA_2020: {
