@@ -227,7 +227,7 @@ class LongitudinalMpc:
     self.x0 = np.zeros(X_DIM)
     self.set_weights()
 
-  def set_weights(self, prev_accel_constraint=True):
+  def set_weights(self, prev_accel_constraint=True, v_lead0=0, v_lead1=0):
     if self.e2e:
       self.set_weights_for_xva_policy()
       self.params[:,0] = -10.
@@ -236,7 +236,7 @@ class LongitudinalMpc:
     else:
       self.set_weights_for_lead_policy(prev_accel_constraint)
 
-  def get_cost_multipliers(self):
+  def get_cost_multipliers(self, v_lead0, v_lead1):
     v_ego = self.x0[1]
     v_ego_bps = [0, 10]
     TFs = [1.0, 1.25, T_FOLLOW]
@@ -246,17 +246,20 @@ class LongitudinalMpc:
     j_ego_tf = interp(T_FOLLOW, TFs, [.6, .8, 1.])
     d_zone_tf = interp(T_FOLLOW, TFs, [1.6, 1.3, 1.])
     # KRKeegan adjustments to improve sluggish acceleration these also
-    # alter deceleration in the same range
-    j_ego_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
-    a_change_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
+    # do not apply to deceleration
+    j_ego_v_ego = 1
+    a_change_v_ego = 1
+    if (v_lead0 - v_ego >= 0) and (v_lead1 - v_ego >= 0):
+      j_ego_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
+      a_change_v_ego = interp(v_ego, v_ego_bps, [.05, 1.])
     # Select the appropriate min/max of the options
     j_ego = min(j_ego_tf, j_ego_v_ego)
     a_change = min(a_change_tf, a_change_v_ego)
     return (a_change, j_ego, d_zone_tf)
 
-  def set_weights_for_lead_policy(self, prev_accel_constraint=True):
+  def set_weights_for_lead_policy(self, prev_accel_constraint=True, v_lead0=0, v_lead1=0):
     a_change_cost = A_CHANGE_COST if prev_accel_constraint else 0
-    cost_multipliers = self.get_cost_multipliers()
+    cost_mulitpliers = self.get_cost_multipliers(v_lead0, v_lead1)
     W = np.asfortranarray(np.diag([X_EGO_OBSTACLE_COST, X_EGO_COST, V_EGO_COST, A_EGO_COST, a_change_cost * cost_multipliers[0], J_EGO_COST * cost_multipliers[1]]))
     for i in range(N):
       W[4,4] = a_change_cost * cost_multipliers[0] * np.interp(T_IDXS[i], [0.0, 1.0, 2.0], [1.0, 1.0, 0.0])
@@ -329,12 +332,14 @@ class LongitudinalMpc:
     self.cruise_max_a = max_a
 
   def update(self, carstate, radarstate, v_cruise):
-    self.set_weights()
     v_ego = self.x0[1]
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
     lead_xv_0 = self.process_lead(radarstate.leadOne)
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
+
+    # Use the processed leads which always have a velocity
+    self.set_weights(lead_xv_0[0,1], lead_xv_1[0,1])
 
     # set accel limits in params
     self.params[:,0] = interp(float(self.status), [0.0, 1.0], [self.cruise_min_a, MIN_ACCEL])
