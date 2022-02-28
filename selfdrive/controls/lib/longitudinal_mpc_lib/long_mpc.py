@@ -259,7 +259,7 @@ class LongitudinalMpc:
 
   def set_weights_for_lead_policy(self, prev_accel_constraint=True, v_lead0=0, v_lead1=0):
     a_change_cost = A_CHANGE_COST if prev_accel_constraint else 0
-    cost_mulitpliers = self.get_cost_multipliers(v_lead0, v_lead1)
+    cost_multipliers = self.get_cost_multipliers(v_lead0, v_lead1)
     W = np.asfortranarray(np.diag([X_EGO_OBSTACLE_COST, X_EGO_COST, V_EGO_COST, A_EGO_COST, a_change_cost * cost_multipliers[0], J_EGO_COST * cost_multipliers[1]]))
     for i in range(N):
       W[4,4] = a_change_cost * cost_multipliers[0] * np.interp(T_IDXS[i], [0.0, 1.0, 2.0], [1.0, 1.0, 0.0])
