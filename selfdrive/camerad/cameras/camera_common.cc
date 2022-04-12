@@ -52,7 +52,7 @@ public:
     CL_CHECK(clReleaseProgram(prg_debayer));
   }
 
-  void queue(cl_command_queue q, cl_mem cam_buf_cl, cl_mem buf_cl, int width, int height, float gain, cl_event *debayer_event) {
+  void queue(cl_command_queue q, cl_mem cam_buf_cl, cl_mem buf_cl, int width, int height, float gain, float black_level, cl_event *debayer_event) {
     CL_CHECK(clSetKernelArg(krnl_, 0, sizeof(cl_mem), &cam_buf_cl));
     CL_CHECK(clSetKernelArg(krnl_, 1, sizeof(cl_mem), &buf_cl));
 
@@ -62,6 +62,7 @@ public:
       const size_t globalWorkSize[] = {size_t(width), size_t(height)};
       const size_t localWorkSize[] = {debayer_local_worksize, debayer_local_worksize};
       CL_CHECK(clSetKernelArg(krnl_, 2, localMemSize, 0));
+      CL_CHECK(clSetKernelArg(krnl_, 3, sizeof(float), &black_level));
       CL_CHECK(clEnqueueNDRangeKernel(q, krnl_, 2, NULL, globalWorkSize, localWorkSize, 0, 0, debayer_event));
     } else {
       if (hdr_) {
@@ -109,6 +110,7 @@ void CameraBuf::init(cl_device_id device_id, cl_context context, CameraState *s,
     camera_bufs[i].allocate(frame_size);
     camera_bufs[i].init_cl(device_id, context);
   }
+  LOGD("allocated %d CL buffers", frame_buf_count);
 
   rgb_width = ci->frame_width;
   rgb_height = ci->frame_height;
@@ -123,8 +125,10 @@ void CameraBuf::init(cl_device_id device_id, cl_context context, CameraState *s,
 
   vipc_server->create_buffers(rgb_type, UI_BUF_COUNT, true, rgb_width, rgb_height);
   rgb_stride = vipc_server->get_buffer(rgb_type)->stride;
+  LOGD("created %d UI vipc buffers with size %dx%d", UI_BUF_COUNT, rgb_width, rgb_height);
 
   vipc_server->create_buffers(yuv_type, YUV_BUFFER_COUNT, false, rgb_width, rgb_height);
+  LOGD("created %d YUV vipc buffers with size %dx%d", YUV_BUFFER_COUNT, rgb_width, rgb_height);
 
   if (ci->bayer) {
     debayer = new Debayer(device_id, context, this, s);
@@ -161,15 +165,19 @@ bool CameraBuf::acquire() {
   cl_mem camrabuf_cl = camera_bufs[cur_buf_idx].buf_cl;
   cl_event event;
 
+  double start_time = millis_since_boot();
+
   if (debayer) {
     float gain = 0.0;
-
+    float black_level = 42.0;
 #ifndef QCOM2
     gain = camera_state->digital_gain;
     if ((int)gain == 0) gain = 1.0;
+#else
+    if (camera_state->camera_id == CAMERA_ID_IMX390) black_level = 64.0;
 #endif
 
-    debayer->queue(q, camrabuf_cl, cur_rgb_buf->buf_cl, rgb_width, rgb_height, gain, &event);
+    debayer->queue(q, camrabuf_cl, cur_rgb_buf->buf_cl, rgb_width, rgb_height, gain, black_level, &event);
   } else {
     assert(rgb_stride == camera_state->ci.frame_stride);
     CL_CHECK(clEnqueueCopyBuffer(q, camrabuf_cl, cur_rgb_buf->buf_cl, 0, 0, cur_rgb_buf->len, 0, 0, &event));
@@ -180,6 +188,8 @@ bool CameraBuf::acquire() {
 
   cur_yuv_buf = vipc_server->get_buffer(yuv_type);
   rgb2yuv->queue(q, cur_rgb_buf->buf_cl, cur_yuv_buf->buf_cl);
+
+  cur_frame_data.processing_time = (millis_since_boot() - start_time) / 1000.0;
 
   VisionIpcBufExtra extra = {
                         cur_frame_data.frame_id,
@@ -219,6 +229,7 @@ void fill_frame_data(cereal::FrameData::Builder &framed, const FrameMetadata &fr
   framed.setLensPos(frame_data.lens_pos);
   framed.setLensErr(frame_data.lens_err);
   framed.setLensTruePos(frame_data.lens_true_pos);
+  framed.setProcessingTime(frame_data.processing_time);
 }
 
 kj::Array<uint8_t> get_frame_image(const CameraBuf *b) {
