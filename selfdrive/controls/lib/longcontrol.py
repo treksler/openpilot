@@ -1,7 +1,7 @@
 from cereal import car
 from common.numpy_fast import clip, interp
 from common.realtime import DT_CTRL
-from selfdrive.controls.lib.pid import PIController
+from selfdrive.controls.lib.pid import PIDController
 from selfdrive.controls.lib.drive_helpers import CONTROL_N
 from selfdrive.modeld.constants import T_IDXS
 
@@ -12,14 +12,25 @@ ACCEL_MIN_ISO = -3.5  # m/s^2
 ACCEL_MAX_ISO = 2.0  # m/s^2
 
 
-def long_control_state_trans(CP, active, long_control_state, v_ego, v_target_future,
-                             brake_pressed, cruise_standstill):
+def apply_deadzone(error, deadzone):
+  if error > deadzone:
+    error -= deadzone
+  elif error < - deadzone:
+    error += deadzone
+  else:
+    error = 0.
+  return error
+
+
+def long_control_state_trans(CP, active, long_control_state, v_ego, v_target,
+                             v_target_future, brake_pressed, cruise_standstill):
   """Update longitudinal control state machine"""
+  accelerating = v_target_future > v_target
   stopping_condition = (v_ego < 2.0 and cruise_standstill) or \
                        (v_ego < CP.vEgoStopping and
-                        (v_target_future < CP.vEgoStopping or brake_pressed))
+                        ((v_target_future < CP.vEgoStopping and not accelerating) or brake_pressed))
 
-  starting_condition = v_target_future > CP.vEgoStarting and not cruise_standstill
+  starting_condition = v_target_future > CP.vEgoStarting and accelerating and not cruise_standstill
 
   if not active:
     long_control_state = LongCtrlState.off
@@ -42,9 +53,9 @@ def long_control_state_trans(CP, active, long_control_state, v_ego, v_target_fut
 class LongControl():
   def __init__(self, CP):
     self.long_control_state = LongCtrlState.off  # initialized to off
-    self.pid = PIController((CP.longitudinalTuning.kpBP, CP.longitudinalTuning.kpV),
-                            (CP.longitudinalTuning.kiBP, CP.longitudinalTuning.kiV),
-                            k_f = CP.longitudinalTuning.kf, rate=1 / DT_CTRL)
+    self.pid = PIDController((CP.longitudinalTuning.kpBP, CP.longitudinalTuning.kpV),
+                             (CP.longitudinalTuning.kiBP, CP.longitudinalTuning.kiV),
+                             k_f = CP.longitudinalTuning.kf, rate=1 / DT_CTRL)
     self.v_pid = 0.0
     self.last_output_accel = 0.0
 
@@ -83,10 +94,10 @@ class LongControl():
     # Update state machine
     output_accel = self.last_output_accel
     self.long_control_state = long_control_state_trans(CP, active, self.long_control_state, CS.vEgo,
-                                                       v_target_future, CS.brakePressed,
+                                                       v_target, v_target_future, CS.brakePressed,
                                                        CS.cruiseState.standstill)
 
-    if self.long_control_state == LongCtrlState.off or CS.gasPressed:
+    if self.long_control_state == LongCtrlState.off:
       self.reset(CS.vEgo)
       output_accel = 0.
 
@@ -100,7 +111,9 @@ class LongControl():
       deadzone = interp(CS.vEgo, CP.longitudinalTuning.deadzoneBP, CP.longitudinalTuning.deadzoneV)
       freeze_integrator = prevent_overshoot
 
-      output_accel = self.pid.update(self.v_pid, CS.vEgo, speed=CS.vEgo, deadzone=deadzone, feedforward=a_target, freeze_integrator=freeze_integrator)
+      error = self.v_pid - CS.vEgo
+      error_deadzone = apply_deadzone(error, deadzone)
+      output_accel = self.pid.update(error_deadzone, speed=CS.vEgo, feedforward=a_target, freeze_integrator=freeze_integrator)
 
       if prevent_overshoot:
         output_accel = min(output_accel, 0.0)

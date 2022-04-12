@@ -4,15 +4,15 @@ import numpy as np
 from common.numpy_fast import interp
 
 import cereal.messaging as messaging
+from common.conversions import Conversions as CV
 from common.filter_simple import FirstOrderFilter
 from common.realtime import DT_MDL
 from selfdrive.modeld.constants import T_IDXS
-from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.longcontrol import LongCtrlState
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import LongitudinalMpc
 from selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDXS_MPC
 from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, CONTROL_N
-from selfdrive.swaglog import cloudlog
+#from selfdrive.swaglog import cloudlog
 
 LON_MPC_STEP = 0.2  # first step is 0.2s
 AWARENESS_DECEL = -0.2  # car smoothly decel at .2m/s^2 when user is distracted
@@ -36,6 +36,8 @@ def limit_accel_in_turns(v_ego, angle_steers, a_target, CP):
   this should avoid accelerating when losing the target in turns
   """
 
+  # FIXME: This function to calculate lateral accel is incorrect and should use the VehicleModel
+  # The lookup table for turns should also be updated if we do this
   a_total_max = interp(v_ego, _A_TOTAL_MAX_BP, _A_TOTAL_MAX_V)
   a_y = v_ego ** 2 * angle_steers * CV.DEG_TO_RAD / (CP.steerRatio * CP.wheelbase)
   a_x_allowed = math.sqrt(max(a_total_max ** 2 - a_y ** 2, 0.))
@@ -56,6 +58,7 @@ class Planner:
     self.v_desired_trajectory = np.zeros(CONTROL_N)
     self.a_desired_trajectory = np.zeros(CONTROL_N)
     self.j_desired_trajectory = np.zeros(CONTROL_N)
+    self.solverExecutionTime = 0.0
 
   def update(self, sm):
     v_ego = sm['carState'].vEgo
@@ -69,7 +72,6 @@ class Planner:
 
     # Reset current state when not engaged, or user is controlling the speed
     reset_state = long_control_state == LongCtrlState.off
-    reset_state = reset_state or sm['carState'].gasPressed
 
     # No change cost when user is controlling the speed, or when standstill
     prev_accel_constraint = not (reset_state or sm['carState'].standstill)
@@ -90,20 +92,28 @@ class Planner:
     # clip limits, cannot init MPC outside of bounds
     accel_limits_turns[0] = min(accel_limits_turns[0], self.a_desired + 0.05)
     accel_limits_turns[1] = max(accel_limits_turns[1], self.a_desired - 0.05)
-
     self.mpc.set_weights(prev_accel_constraint)
-    self.mpc.set_accel_limits(accel_limits_turns[0], accel_limits_turns[1])
+    self.mpc.set_accel_limits(-3.5, 2.)
     self.mpc.set_cur_state(self.v_desired_filter.x, self.a_desired)
-    self.mpc.update(sm['carState'], sm['radarState'], v_cruise)
-
+    if (len(sm['modelV2'].position.x) == 33 and
+         len(sm['modelV2'].velocity.x) == 33 and
+          len(sm['modelV2'].acceleration.x) == 33):
+      x = np.interp(T_IDXS_MPC, T_IDXS, sm['modelV2'].position.x)
+      v = np.interp(T_IDXS_MPC, T_IDXS, sm['modelV2'].velocity.x)
+      a = np.interp(T_IDXS_MPC, T_IDXS, sm['modelV2'].acceleration.x)
+    else:
+      x = np.zeros(len(T_IDXS_MPC))
+      v = np.zeros(len(T_IDXS_MPC))
+      a = np.zeros(len(T_IDXS_MPC))
+    self.mpc.update(sm['carState'], sm['radarState'], v_cruise, x, v, a)
     self.v_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.v_solution)
     self.a_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC, self.mpc.a_solution)
     self.j_desired_trajectory = np.interp(T_IDXS[:CONTROL_N], T_IDXS_MPC[:-1], self.mpc.j_solution)
 
-    # TODO counter is only needed because radar is glitchy, remove once radar is gone
-    self.fcw = self.mpc.crash_cnt > 5
-    if self.fcw:
-      cloudlog.info("FCW triggered")
+    #TODO counter is only needed because radar is glitchy, remove once radar is gone
+    self.fcw = False #self.mpc.crash_cnt > 5
+    #if self.fcw:
+    #  cloudlog.info("FCW triggered")
 
     # Interpolate 0.05 seconds and save as starting point for next iteration
     a_prev = self.a_desired
@@ -113,7 +123,7 @@ class Planner:
   def publish(self, sm, pm):
     plan_send = messaging.new_message('longitudinalPlan')
 
-    plan_send.valid = sm.all_alive_and_valid(service_list=['carState', 'controlsState'])
+    plan_send.valid = sm.all_checks(service_list=['carState', 'controlsState'])
 
     longitudinalPlan = plan_send.longitudinalPlan
     longitudinalPlan.modelMonoTime = sm.logMonoTime['modelV2']
@@ -124,7 +134,7 @@ class Planner:
     longitudinalPlan.jerks = self.j_desired_trajectory.tolist()
 
     longitudinalPlan.hasLead = sm['radarState'].leadOne.status
-    longitudinalPlan.longitudinalPlanSource = self.mpc.source
+    #longitudinalPlan.longitudinalPlanSource = self.mpc.source
     longitudinalPlan.fcw = self.fcw
 
     longitudinalPlan.solverExecutionTime = self.mpc.solve_time
