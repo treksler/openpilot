@@ -232,8 +232,13 @@ OmxEncoder::OmxEncoder(const char* filename, CameraType type, int in_width, int 
 
   if (h265) {
     // setup HEVC
+  #ifndef QCOM2
+    OMX_VIDEO_PARAM_HEVCTYPE hevc_type = {0};
+    OMX_INDEXTYPE index_type = (OMX_INDEXTYPE) OMX_IndexParamVideoHevc;
+  #else
     OMX_VIDEO_PARAM_PROFILELEVELTYPE hevc_type = {0};
     OMX_INDEXTYPE index_type = OMX_IndexParamVideoProfileLevelCurrent;
+  #endif
     hevc_type.nSize = sizeof(hevc_type);
     hevc_type.nPortIndex = (OMX_U32) PORT_INDEX_OUT;
     OMX_CHECK(OMX_GetParameter(this->handle, index_type, (OMX_PTR) &hevc_type));
@@ -473,8 +478,47 @@ int OmxEncoder::encode_frame(const uint8_t *y_ptr, const uint8_t *u_ptr, const u
 }
 
 void OmxEncoder::encoder_open(const char* path) {
-  if (this->write) {
-    writer.reset(new VideoWriter(path, this->filename, this->remuxing, this->width, this->height, this->fps, !this->remuxing, false));
+  int err;
+
+  snprintf(this->vid_path, sizeof(this->vid_path), "%s/%s", path, this->filename);
+  LOGD("encoder_open %s remuxing:%d", this->vid_path, this->remuxing);
+
+  if (this->remuxing) {
+    avformat_alloc_output_context2(&this->ofmt_ctx, NULL, NULL, this->vid_path);
+    assert(this->ofmt_ctx);
+
+    this->out_stream = avformat_new_stream(this->ofmt_ctx, NULL);
+    assert(this->out_stream);
+
+    // set codec correctly
+    av_register_all();
+
+    AVCodec *codec = NULL;
+    codec = avcodec_find_encoder(AV_CODEC_ID_H264);
+    assert(codec);
+
+    this->codec_ctx = avcodec_alloc_context3(codec);
+    assert(this->codec_ctx);
+    this->codec_ctx->width = this->width;
+    this->codec_ctx->height = this->height;
+    this->codec_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
+    this->codec_ctx->time_base = (AVRational){ 1, this->fps };
+
+    err = avio_open(&this->ofmt_ctx->pb, this->vid_path, AVIO_FLAG_WRITE);
+    assert(err >= 0);
+
+    this->wrote_codec_config = false;
+  } else {
+    if (this->write) {
+      this->of = util::safe_fopen(this->vid_path, "wb");
+      assert(this->of);
+#ifndef QCOM2
+      if (this->codec_config_len > 0) {
+        util::safe_fwrite(this->codec_config, 1, this->codec_config_len, this->of);
+      }
+#endif
+    }
+>>>>>>> parent of 1795a2ac0 (C2: remove some dead code (#24256))
   }
 
   // start writer threads
