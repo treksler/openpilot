@@ -235,7 +235,7 @@ class TestOnroad(unittest.TestCase):
     if EON:
       cfgs += [("modelV2", 0.045, 0.04)]
     else:
-      cfgs += [("modelV2", 0.038, 0.036), ("driverState", 0.028, 0.026)]
+      cfgs += [("modelV2", 0.050, 0.036), ("driverState", 0.050, 0.026)]
 
     for (s, instant_max, avg_max) in cfgs:
       ts = [getattr(getattr(m, s), "modelExecutionTime") for m in self.lr if m.which() == s]
