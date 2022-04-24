@@ -518,7 +518,6 @@ void OmxEncoder::encoder_open(const char* path) {
       }
 #endif
     }
->>>>>>> parent of 1795a2ac0 (C2: remove some dead code (#24256))
   }
 
   // start writer threads
