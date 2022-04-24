@@ -40,7 +40,6 @@ procs = [
 
   NativeProcess("bridge", "cereal/messaging", ["./bridge"], onroad=False, notcar=True),
   PythonProcess("webjoystick", "tools.joystick.web", onroad=False, notcar=True),
-
   # EON only
   PythonProcess("rtshield", "selfdrive.rtshield", enabled=EON),
   PythonProcess("shutdownd", "selfdrive.hardware.eon.shutdownd", enabled=EON),
