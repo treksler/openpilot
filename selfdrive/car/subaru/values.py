@@ -27,6 +27,7 @@ class CAR:
   CROSSTREK_2020H = "SUBARU CROSSTREK LIMITED 2020 HYBRID"
   FORESTER = "SUBARU FORESTER 2019"
   FORESTER_PREGLOBAL = "SUBARU FORESTER 2017 - 2018"
+  LEGACY = "SUBARU LEGACY 2020"
   LEGACY_PREGLOBAL = "SUBARU LEGACY 2015 - 2017"
   LEGACY_PREGLOBAL_2018 = "SUBARU LEGACY 2018 - 2019"
   LEVORG_PREGLOBAL = "SUBARU LEVORG 2016"
@@ -275,6 +276,24 @@ FW_VERSIONS = {
       b'\xda\xfd\xe0\x80\x00',
       b'\xdc\xf2`\x81\000',
       b'\xdc\xf2`\x80\x00',
+    ],
+  },
+  CAR.LEGACY: {
+    # Ecu, addr, subaddr: ROM ID
+    (Ecu.esp, 0x7b0, None): [
+      b'\xa1\  x04\x01',
+    ],
+    (Ecu.eps, 0x746, None): [
+      b'\x9b\xc0\x11\x00',
+    ],
+    (Ecu.fwdCamera, 0x787, None): [
+      b'\x00\x00e\x80\x00\x1f@ \x19\x00',
+    ],
+    (Ecu.engine, 0x7e0, None): [
+      b'\xde\"a0\x07',
+    ],
+    (Ecu.transmission, 0x7e1, None): [
+      b'\xa5\xf6\x05@\x00',
     ],
   },
   CAR.LEGACY_PREGLOBAL: {
@@ -539,6 +558,7 @@ STEER_THRESHOLD = {
   CAR.CROSSTREK_2020H: 80,
   CAR.FORESTER: 80,
   CAR.FORESTER_PREGLOBAL: 75,
+  CAR.LEGACY: 80,
   CAR.LEGACY_PREGLOBAL: 75,
   CAR.LEGACY_PREGLOBAL_2018: 75,
   CAR.LEVORG_PREGLOBAL: 75,
@@ -555,6 +575,7 @@ DBC = {
   CAR.CROSSTREK_2020H: dbc_dict('subaru_global_2020_hybrid_generated', None),
   CAR.FORESTER: dbc_dict('subaru_global_2017_generated', None),
   CAR.FORESTER_PREGLOBAL: dbc_dict('subaru_forester_2017_generated', None),
+  CAR.LEGACY: dbc_dict('subaru_global_2017_generated', None),
   CAR.LEGACY_PREGLOBAL: dbc_dict('subaru_outback_2015_generated', None),
   CAR.LEGACY_PREGLOBAL_2018: dbc_dict('subaru_outback_2019_generated', None),
   CAR.LEVORG_PREGLOBAL: dbc_dict('subaru_forester_2017_generated', None),
