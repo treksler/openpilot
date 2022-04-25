@@ -46,6 +46,10 @@ const char frame_fragment_shader[] =
   "  float g = y - 0.344 * u - 0.714 * v;\n"
   "  float b = y + 1.772 * u;\n"
   "  colorOut = vec4(r, g, b, 1.0);\n"
+  #ifdef QCOM
+  "  vec3 dz = vec3(0.0627f, 0.0627f, 0.0627f);\n"
+  "  colorOut.rgb = ((vec3(1.0f, 1.0f, 1.0f) - dz) * colorOut.rgb / vec3(1.0f, 1.0f, 1.0f)) + dz;\n"
+  #endif
   "}\n";
 
 const mat4 device_transform = {{
