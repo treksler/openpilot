@@ -6,10 +6,12 @@
 #include <thread>
 
 #include <OMX_Component.h>
+extern "C" {
+#include <libavformat/avformat.h>
+}
 
 #include "selfdrive/common/queue.h"
 #include "selfdrive/loggerd/encoder.h"
-#include "selfdrive/loggerd/video_writer.h"
 
 struct OmxBuffer {
   OMX_BUFFERHEADERTYPE header;
@@ -43,6 +45,8 @@ private:
 
   int in_width_, in_height_;
   int width, height, fps;
+  char vid_path[1024];
+  char lock_path[1024];
   bool is_open = false;
   bool dirty = false;
   bool write = false;
@@ -50,11 +54,16 @@ private:
   std::thread callback_handler_thread;
   std::thread write_handler_thread;
   int segment_num = -1;
-  std::unique_ptr<PubMaster> pm;
+  PubMaster *pm;
   const char *service_name;
 
   const char* filename;
+  FILE *of = nullptr;
   CameraType type;
+
+  size_t codec_config_len;
+  uint8_t *codec_config = NULL;
+  bool wrote_codec_config;
 
   std::mutex state_lock;
   std::condition_variable state_cv;
@@ -71,8 +80,10 @@ private:
   SafeQueue<OMX_BUFFERHEADERTYPE *> done_out;
   SafeQueue<OmxBuffer *> to_write;
 
+  AVFormatContext *ofmt_ctx;
+  AVCodecContext *codec_ctx;
+  AVStream *out_stream;
   bool remuxing;
-  std::unique_ptr<VideoWriter> writer;
 
   bool downscale;
   uint8_t *y_ptr2, *u_ptr2, *v_ptr2;
