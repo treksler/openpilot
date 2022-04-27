@@ -64,7 +64,7 @@ void VideoWriter::write(uint8_t *data, int len, long long timestamp, bool codecc
   }
 
   if (remuxing) {
-    if (codecconfig) {
+    if (!this->wrote_codec_config && len > 0) {
       if (data) {
         codec_ctx->extradata = (uint8_t*)av_mallocz(len + AV_INPUT_BUFFER_PADDING_SIZE);
         codec_ctx->extradata_size = len;
@@ -74,6 +74,8 @@ void VideoWriter::write(uint8_t *data, int len, long long timestamp, bool codecc
       assert(err >= 0);
       err = avformat_write_header(ofmt_ctx, NULL);
       assert(err >= 0);
+
+      this->wrote_codec_config = true;
     } else {
       // input timestamps are in microseconds
       AVRational in_timebase = {1, 1000000};
