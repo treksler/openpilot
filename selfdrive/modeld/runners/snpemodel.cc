@@ -18,7 +18,7 @@ SNPEModel::SNPEModel(const char *path, float *loutput, size_t loutput_size, int 
   output = loutput;
   output_size = loutput_size;
   use_extra = luse_extra;
-#if defined(QCOM) || defined(QCOM2)
+#ifdef QCOM2
   if (runtime==USE_GPU_RUNTIME) {
     Runtime = zdl::DlSystem::Runtime_t::GPU;
   } else if (runtime==USE_DSP_RUNTIME) {
@@ -39,7 +39,7 @@ SNPEModel::SNPEModel(const char *path, float *loutput, size_t loutput_size, int 
   // create model runner
   zdl::SNPE::SNPEBuilder snpeBuilder(container.get());
   while (!snpe) {
-#if defined(QCOM) || defined(QCOM2)
+#ifdef QCOM2
     snpe = snpeBuilder.setOutputLayers({})
                       .setRuntimeProcessor(Runtime)
                       .setUseUserSuppliedBuffers(true)
@@ -139,6 +139,11 @@ void SNPEModel::addTrafficConvention(float *state, int state_size) {
 void SNPEModel::addDesire(float *state, int state_size) {
   desire = state;
   desireBuffer = this->addExtra(state, state_size, 1);
+}
+
+void SNPEModel::addCalib(float *state, int state_size) {
+  calib = state;
+  calibBuffer = this->addExtra(state, state_size, 1);
 }
 
 void SNPEModel::addImage(float *image_buf, int buf_size) {
