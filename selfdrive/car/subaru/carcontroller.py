@@ -5,6 +5,7 @@ from selfdrive.car.subaru.values import DBC, PREGLOBAL_CARS, CarControllerParams
 from opendbc.can.packer import CANPacker
 
 ACCEL_HYST_GAP = 10  # don't change accel command for small oscilalitons within this value
+CREEP_SPEED = 2.3
 
 def accel_hysteresis(accel, accel_steady):
 
@@ -75,6 +76,12 @@ class CarController():
 
     if CS.CP.openpilotLongitudinalControl:
 
+      # Improve Subaru acceleration from stop
+      start_boost = interp(CS.out.vEgo, [0.0, CREEP_SPEED, 2 * CREEP_SPEED], [0.6, 0.6, 0.0])
+      is_accelerating = interp(actuators.accel, [0.0, 0.2], [0.0, 1.0])
+      boost = start_boost * is_accelerating
+      #print('accel: %s, boost: %s' % (actuators.accel, boost))
+
       gas, brake = compute_gb(actuators.accel)
 
       # Manual trigger using wipers signal
@@ -95,8 +102,8 @@ class CarController():
 
       if enabled and gas > 0:
         # limit min and max values
-        cruise_throttle = clip(int(CarControllerParams.THROTTLE_BASE + (gas * CarControllerParams.THROTTLE_SCALE)), CarControllerParams.THROTTLE_MIN, CarControllerParams.THROTTLE_MAX)
-        cruise_rpm = clip(int(CarControllerParams.RPM_BASE + (gas * CarControllerParams.RPM_SCALE)), CarControllerParams.RPM_MIN, CarControllerParams.RPM_MAX)
+        cruise_throttle = clip(int(CarControllerParams.THROTTLE_BASE + (gas + boost * CarControllerParams.THROTTLE_SCALE)), CarControllerParams.THROTTLE_MIN, CarControllerParams.THROTTLE_MAX)
+        cruise_rpm = clip(int(CarControllerParams.RPM_BASE + (gas + boost * CarControllerParams.RPM_SCALE)), CarControllerParams.RPM_MIN, CarControllerParams.RPM_MAX)
         # hysteresis
         cruise_throttle, self.throttle_steady = accel_hysteresis(cruise_throttle, self.throttle_steady)
         cruise_rpm, self.rpm_steady = accel_hysteresis(cruise_rpm, self.rpm_steady)
