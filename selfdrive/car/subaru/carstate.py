@@ -73,7 +73,7 @@ class CarState(CarStateBase):
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]["Conventional_Cruise"] == 1
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.cruise_state = cp_cam.vl["ES_DashStatus"]["Cruise_State"]
-    self.auto_hold = CS.cruise_state == 3
+    self.auto_hold = self.cruise_state == 3
     self.lead_dist = cp_cam.vl["ES_Distance"]["Close_Distance"]
     self.has_lead = cp_cam.vl["ES_Distance"]["Car_Follow"] == 1
     self.throttle_msg = copy.copy(cp.vl["Throttle"])

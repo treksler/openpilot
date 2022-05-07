@@ -58,7 +58,7 @@ class CarController():
     self.prev_cruise_state = CS.cruise_state
 
     if (c.enabled and CS.has_lead and CS.auto_hold and not self.manual_hold and CS.out.standstill and
-        self.p.LEAD_MIN_DIST < lead_dist < self.p.LEAD_MAX_DIST and lead_dist > self.prev_lead_dist):
+        self.p.LEAD_MIN_DIST < CS.lead_dist < self.p.LEAD_MAX_DIST and CS.lead_dist > self.prev_lead_dist):
       self.sng_acc_resume = True
 
     if self.sng_acc_resume:
@@ -73,7 +73,7 @@ class CarController():
     if c.enabled and CS.out.brakePressed and not CS.has_lead and CS.out.standstill:
       pcm_cancel_cmd = True
 
-    self.prev_lead_dist = lead_dist
+    self.prev_lead_dist = CS.lead_dist
 
     # *** alerts and pcm cancel ***
 
