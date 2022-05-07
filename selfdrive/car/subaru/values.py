@@ -18,6 +18,8 @@ class CarControllerParams:
     self.STEER_DRIVER_ALLOWANCE = 60   # allowed driver torque before start limiting
     self.STEER_DRIVER_MULTIPLIER = 10  # weight driver torque heavily
     self.STEER_DRIVER_FACTOR = 1       # from dbc
+    self.LEAD_MIN_DIST = 3             # minimum lead distance for stop and go (m)
+    self.LEAD_MAX_DIST = 4.5           # minimum lead distance for stop and go (m)
 
 
 class CAR:

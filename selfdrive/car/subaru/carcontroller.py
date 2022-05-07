@@ -17,7 +17,7 @@ class CarController():
     self.sng_acc_resume_cnt = -1
     self.manual_hold = False
     self.prev_cruise_state = 0
-    self.prev_close_distance = 0
+    self.prev_lead_dist = 0
 
     self.p = CarControllerParams(CP)
     self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
@@ -51,31 +51,15 @@ class CarController():
 
     throttle_cmd = False
 
-    if CS.CP.carFingerprint in PREGLOBAL_CARS:
-      if (c.enabled                                            # ACC active
-          and CS.car_follow == 1                             # lead car
-          and CS.out.standstill                              # must be standing still
-          and CS.close_distance > 3                          # acc resume min trigger threshold (m)
-          and CS.close_distance < 4.5                        # acc resume max trigger threshold (m)
-          and CS.close_distance > self.prev_close_distance): # distance with lead car is increasing
-        self.sng_acc_resume = True
-    elif CS.CP.carFingerprint not in PREGLOBAL_CARS:
-      # Record manual hold set while in standstill and no car in front
-      if CS.out.standstill and self.prev_cruise_state == 1 and CS.cruise_state == 3 and CS.car_follow == 0:
-        self.manual_hold = True
-      # Cancel manual hold when car starts moving
-      if not CS.out.standstill:
-        self.manual_hold = False
-      if (c.enabled                                            # ACC active
-          and not self.manual_hold
-          and CS.car_follow == 1                             # lead car
-          and CS.cruise_state == 3                           # ACC HOLD (only with EPB)
-          and CS.out.standstill                              # must be standing still
-          and CS.close_distance > 3                          # acc resume min trigger threshold (m)
-          and CS.close_distance < 4.5                        # acc resume max trigger threshold (m)
-          and CS.close_distance > self.prev_close_distance): # distance with lead car is increasing
-        self.sng_acc_resume = True
-      self.prev_cruise_state = CS.cruise_state
+    if CS.out.standstill and CS.auto_hold and not CS.has_lead and self.prev_cruise_state == 1:
+      self.manual_hold = True
+    elif not CS.out.standstill:
+      self.manual_hold = False
+    self.prev_cruise_state = CS.cruise_state
+
+    if (c.enabled and CS.has_lead and CS.auto_hold and not self.manual_hold and CS.out.standstill and
+        self.p.LEAD_MIN_DIST < lead_dist < self.p.LEAD_MAX_DIST and lead_dist > self.prev_lead_dist):
+      self.sng_acc_resume = True
 
     if self.sng_acc_resume:
       if self.sng_acc_resume_cnt < 5:
@@ -86,10 +70,10 @@ class CarController():
         self.sng_acc_resume_cnt = -1
 
     # Cancel ACC if stopped, brake pressed and not stopped behind another car
-    if c.enabled and CS.out.brakePressed and CS.car_follow == 0 and CS.out.standstill:
+    if c.enabled and CS.out.brakePressed and not CS.has_lead and CS.out.standstill:
       pcm_cancel_cmd = True
 
-    self.prev_close_distance = CS.close_distance
+    self.prev_lead_dist = lead_dist
 
     # *** alerts and pcm cancel ***
 

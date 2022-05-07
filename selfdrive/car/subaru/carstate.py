@@ -67,13 +67,15 @@ class CarState(CarStateBase):
     if self.car_fingerprint in PREGLOBAL_CARS:
       self.cruise_button = cp_cam.vl["ES_Distance"]["Cruise_Button"]
       self.ready = not cp_cam.vl["ES_DashStatus"]["Not_Ready_Startup"]
+      self.cruise_state = 3 # FIXME: Find Preglobal cruise_state signal
     else:
       ret.steerFaultTemporary = cp.vl["Steering_Torque"]["Steer_Warning"] == 1
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]["Conventional_Cruise"] == 1
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.cruise_state = cp_cam.vl["ES_DashStatus"]["Cruise_State"]
-    self.car_follow = cp_cam.vl["ES_Distance"]["Car_Follow"]
-    self.close_distance = cp_cam.vl["ES_Distance"]["Close_Distance"]
+    self.auto_hold = CS.cruise_state == 3
+    self.lead_dist = cp_cam.vl["ES_Distance"]["Close_Distance"]
+    self.has_lead = cp_cam.vl["ES_Distance"]["Car_Follow"] == 1
     self.throttle_msg = copy.copy(cp.vl["Throttle"])
     self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
 
