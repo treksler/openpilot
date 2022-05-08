@@ -29,6 +29,8 @@ def create_es_distance(packer, es_distance_msg, longActive, pcm_cancel_cmd, brak
   if brake_cmd:
     values["Cruise_Throttle"] = 808 if brake_value >= 35 else 1818
     values["Cruise_Brake_Active"] = 1
+  # Do not disable openpilot on Eyesight Soft Disable
+  values["Cruise_Soft_Disable"] = 0
 
   return packer.make_can_msg("ES_Distance", 0, values)
 
