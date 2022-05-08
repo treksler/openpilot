@@ -4,7 +4,8 @@
 	branch = feature-subaru-long
 [submodule "opendbc"]
 	path = opendbc
-	url = ../../commaai/opendbc.git
+	url = ../../martinl/opendbc.git
+	url = subaru-community
 [submodule "laika_repo"]
 	path = laika_repo
 	url = ../../commaai/laika.git
