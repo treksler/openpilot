@@ -5,7 +5,7 @@
 [submodule "opendbc"]
 	path = opendbc
 	url = ../../martinl/opendbc.git
-	url = subaru-community
+	branch = subaru-community
 [submodule "laika_repo"]
 	path = laika_repo
 	url = ../../commaai/laika.git
