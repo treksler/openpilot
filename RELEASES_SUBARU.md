@@ -2,6 +2,7 @@
 ==========
 * FPv2 updates
   * 2022 Outback XT Touring - UDM / @cook.w.ryan
+  * 2021 Legacy - UDM / @duchuy1993
 
 2022-05-05
 ==========
