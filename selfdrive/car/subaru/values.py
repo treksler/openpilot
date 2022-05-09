@@ -361,6 +361,7 @@ FW_VERSIONS = {
     # 2020 Outback 2.4 Touring XT  - UDM / @chrissantamaria
     # 2022 Outback - UDM / @atran913
     # 2022 Outback - UDM / @duchuy1993
+    # 2022 Outback XT Touring - UDM / @cook.w.ryan
     # Ecu, addr, subaddr: ROM ID
     (Ecu.esp, 0x7b0, None): [
       b'\xa1  \x06\x01',
@@ -369,6 +370,7 @@ FW_VERSIONS = {
       b'\xa1  \x06\x00',
       b'\xa1 "\t\x01',
       b'\xa1  \x08\x02'
+      b'\xa1 \x06\x02',
     ],
     (Ecu.eps, 0x746, None): [
       b'\x9b\xc0\x10\x00',
@@ -387,6 +389,7 @@ FW_VERSIONS = {
       b'\xf1\x82\xbc,\xa0q\a',
       b'\xf1\x82\xe3,\xa0@\x07',
       b'\xe2"`p\x07',
+      b'\xf1\x82\xe2,\xa0@\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xa5\xfe\xf7@\x00',
@@ -394,6 +397,7 @@ FW_VERSIONS = {
       b'\xa5\xfe\xf6@\x00',
       b'\xa7\x8e\xf40\x00',
       b'\xf1\x82\xa7\xf6D@\x00'
+      b'\xa7\xfe\xf4@\x00',
     ],
   },
   CAR.OUTBACK_PREGLOBAL: {
