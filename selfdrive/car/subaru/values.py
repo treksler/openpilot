@@ -281,7 +281,7 @@ FW_VERSIONS = {
   CAR.LEGACY: {
     # Ecu, addr, subaddr: ROM ID
     (Ecu.esp, 0x7b0, None): [
-      b'\xa1\  x04\x01',
+      b'\xa1\\  x04\x01',
     ],
     (Ecu.eps, 0x746, None): [
       b'\x9b\xc0\x11\x00',
@@ -388,7 +388,7 @@ FW_VERSIONS = {
       b'\xa1  \b\001',
       b'\xa1  \x06\x00',
       b'\xa1 "\t\x01',
-      b'\xa1  \x08\x02'
+      b'\xa1  \x08\x02',
       b'\xa1 \x06\x02',
     ],
     (Ecu.eps, 0x746, None): [
@@ -415,7 +415,7 @@ FW_VERSIONS = {
       b'\xa5\xf6D@\x00',
       b'\xa5\xfe\xf6@\x00',
       b'\xa7\x8e\xf40\x00',
-      b'\xf1\x82\xa7\xf6D@\x00'
+      b'\xf1\x82\xa7\xf6D@\x00',
       b'\xa7\xfe\xf4@\x00',
     ],
   },
