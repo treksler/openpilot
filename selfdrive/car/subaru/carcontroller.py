@@ -102,8 +102,8 @@ class CarController():
 
       if enabled and gas > 0:
         # limit min and max values
-        cruise_throttle = clip(int(CarControllerParams.THROTTLE_BASE + (gas + boost * CarControllerParams.THROTTLE_SCALE)), CarControllerParams.THROTTLE_MIN, CarControllerParams.THROTTLE_MAX)
-        cruise_rpm = clip(int(CarControllerParams.RPM_BASE + (gas + boost * CarControllerParams.RPM_SCALE)), CarControllerParams.RPM_MIN, CarControllerParams.RPM_MAX)
+        cruise_throttle = clip(int(CarControllerParams.THROTTLE_BASE + ((gas + boost) * CarControllerParams.THROTTLE_SCALE)), CarControllerParams.THROTTLE_MIN, CarControllerParams.THROTTLE_MAX)
+        cruise_rpm = clip(int(CarControllerParams.RPM_BASE + ((gas + boost) * CarControllerParams.RPM_SCALE)), CarControllerParams.RPM_MIN, CarControllerParams.RPM_MAX)
         # hysteresis
         cruise_throttle, self.throttle_steady = accel_hysteresis(cruise_throttle, self.throttle_steady)
         cruise_rpm, self.rpm_steady = accel_hysteresis(cruise_rpm, self.rpm_steady)
