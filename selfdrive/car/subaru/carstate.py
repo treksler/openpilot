@@ -77,7 +77,7 @@ class CarState(CarStateBase):
     if self.car_fingerprint in [CAR.OUTBACK, CAR.LEGACY]:
       ret.cruiseState.enabled = cp_body.vl["CruiseControl"]["Cruise_Activated"] != 0
       ret.cruiseState.available = cp_body.vl["CruiseControl"]["Cruise_On"] != 0
-    elif self.car_fingerprint == CAR.CROSSTREK_2020H:
+    elif self.car_fingerprint in [CAR.CROSSTREK_2020H, CAR.FORESTER_2020H]:
       ret.cruiseState.enabled = cp_cam.vl["ES_DashStatus"]['Cruise_Activated'] != 0
       ret.cruiseState.available = cp_cam.vl["ES_DashStatus"]['Cruise_On'] != 0
     else:
