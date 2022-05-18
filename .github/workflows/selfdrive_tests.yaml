@@ -299,7 +299,8 @@ jobs:
       run: eval "$BUILD"
     - name: Run replay
       run: |
-        ${{ env.RUN }} "scons -j$(nproc) && \
+        ${{ env.RUN }} "git config --global --add safe.directory /tmp/openpilot/panda && \
+                        scons -j$(nproc) && \
                         FILEREADER_CACHE=1 CI=1 coverage run selfdrive/test/process_replay/test_processes.py && \
                         coverage xml"
     - name: "Upload coverage to Codecov"
