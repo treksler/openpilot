@@ -18,9 +18,9 @@ class CarInterface(CarInterfaceBase):
     elif candidate in [CAR.OUTBACK, CAR.LEGACY]:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruGen2)]
     elif candidate == CAR.CROSSTREK_2020H:
-      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruCrosstrekHybrid)]
+      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruCrosstrekH)]
     elif candidate == CAR.FORESTER_2020H:
-      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruForesterHybrid)]
+      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruForesterH)]
     else:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaru)]
 
