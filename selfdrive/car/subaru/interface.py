@@ -18,7 +18,9 @@ class CarInterface(CarInterfaceBase):
     elif candidate in [CAR.OUTBACK, CAR.LEGACY]:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruGen2)]
     elif candidate == CAR.CROSSTREK_2020H:
-      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruHybrid)]
+      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruCrosstrekHybrid)]
+    elif candidate == CAR.FORESTER_2020H:
+      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruForesterHybrid)]
     else:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaru)]
 
@@ -73,7 +75,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 14., 23.], [0., 14., 23.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.045, 0.042, 0.20], [0.04, 0.035, 0.045]]
 
-    if candidate == CAR.FORESTER:
+    if candidate in [CAR.FORESTER, CAR.FORESTER_2020H]:
       ret.mass = 1568. + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5
