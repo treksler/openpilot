@@ -22,7 +22,7 @@
     "_comment": "Append the command and error to the text."
   },
   "Offroad_NoMoreUpdates": {
-    "text": "SA-master has been updated to a commit that deprecates C2 support, your device will no longer update on this branch.",
+    "text": "subaru-PR-test has deprecated EON and C2 support, your device will no longer update on this branch. Please consider switching to subaru-community-c2 branch or upgrade to C3.",
     "severity": 1
   },
   "Offroad_InvalidTime": {
