@@ -83,6 +83,12 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
       "Add 10 second delay before running FPv2 ECU firmware queries. May be needed for Subaru pre-global models",
       "../assets/offroad/icon_speed_limit.png",
     },
+    {
+      "DisableUpdates",
+      "Disable Updates",
+      "Disable openpilot updates for this device",
+      "../assets/offroad/icon_openpilot.png",
+    },
 #ifdef ENABLE_MAPS
     {
       "NavSettingTime24h",
