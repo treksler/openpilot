@@ -1,3 +1,11 @@
+2022-05-21
+==========
+* Added Disable updates toggle
+
+2022-05-20
+==========
+* Added support for Forester Hybrid
+
 2022-05-09
 ==========
 * FPv2 updates
