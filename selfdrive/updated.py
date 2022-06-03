@@ -343,9 +343,9 @@ def fetch_update(wait_helper: WaitTimeHelper) -> bool:
 def main() -> None:
   params = Params()
 
-  # if params.get_bool("DisableUpdates"):
-  #   cloudlog.warning("updates are disabled by the DisableUpdates param")
-  #   exit(0)
+  if params.get_bool("DisableUpdates"):
+    cloudlog.warning("updates are disabled by the DisableUpdates param")
+    exit(0)
 
   ov_lock_fd = open(LOCK_FILE, 'w')
   try:

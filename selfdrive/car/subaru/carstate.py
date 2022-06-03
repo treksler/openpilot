@@ -221,7 +221,6 @@ class CarState(CarStateBase):
       checks.append(("BodyInfo", 10))
 
       # Brake_Status is on can1 for OUTBACK
-      if CP.carFingerprint != CAR.OUTBACK:
       if CP.carFingerprint not in [CAR.OUTBACK, CAR.LEGACY]:
         signals.append(("Brake", "Brake_Status"))
         checks.append(("Brake_Status", 50))
