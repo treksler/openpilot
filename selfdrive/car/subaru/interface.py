@@ -18,7 +18,7 @@ class CarInterface(CarInterfaceBase):
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruLegacy)]
       ret.enableBsm = 0x25c in fingerprint[0]
     elif candidate == CAR.FORESTER_2020H:
-      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruForesterH)]
+      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruForesterHybrid)]
     else:
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaru)]
 
