@@ -1,3 +1,9 @@
+2022-06-07
+==========
+* FPv2 updates
+  * 2020 Subaru Outback 2.5i Touring / @CheckYourSix
+  * 2020 Impreza / @R0B
+
 2022-05-21
 ==========
 * Added Disable updates toggle
