@@ -321,6 +321,8 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: true
+    - name: Pull LFS
+      run: git lfs pull
     - name: Cache dependencies
       id: dependency-cache
       uses: actions/cache@v2
@@ -341,9 +343,6 @@ jobs:
           scons-
     - name: Build Docker image
       run: eval "$BUILD"
-    - name: Run debug
-      run: |
-        ${{ env.RUN }} "ls -la selfdrive/test/process_replay/fakedata"
     - name: Run replay
       run: |
         ${{ env.RUN }} "scons -j$(nproc) && \
