@@ -6,4 +6,5 @@ process_replay/model_diff.txt
 valgrind_logs.txt
 
 *.bz2
+!selfdrive/test/process/replay/fakedata/*.bz2
 *.hevc
