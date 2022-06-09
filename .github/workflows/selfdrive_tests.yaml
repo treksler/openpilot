@@ -341,6 +341,9 @@ jobs:
           scons-
     - name: Build Docker image
       run: eval "$BUILD"
+    - name: Run debug
+      run: |
+        ${{ env.RUN }} "ls -la selfdrive/test/process_replay/fakedata"
     - name: Run replay
       run: |
         ${{ env.RUN }} "scons -j$(nproc) && \
