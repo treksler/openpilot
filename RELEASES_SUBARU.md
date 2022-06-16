@@ -28,6 +28,10 @@
 * FPv2 updates
   * 2022 Outback - UDM / @duchuy1993
 
+2022-04-27
+==========
+ * NEOS 20: improved reliability
+
 2022-04-02
 ==========
 * FPv2 updates
