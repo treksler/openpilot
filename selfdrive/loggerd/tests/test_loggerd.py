@@ -105,7 +105,6 @@ class TestLoggerd(unittest.TestCase):
       self.assertEqual(getattr(initData, k), v)
 
   def test_rotation(self):
-    return
     os.environ["LOGGERD_TEST"] = "1"
     Params().put("RecordFront", "1")
 
