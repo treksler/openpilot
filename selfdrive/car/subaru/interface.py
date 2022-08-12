@@ -21,9 +21,7 @@ class CarInterface(CarInterfaceBase):
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaru)]
       ret.enableBsm = 0x228 in fingerprint[0]
 
-    #ret.dashcamOnly = candidate in PREGLOBAL_CARS
-    # Experimental branch
-    ret.dashcamOnly = True
+    ret.dashcamOnly = candidate in PREGLOBAL_CARS
 
     ret.steerRateCost = 0.7
     ret.steerLimitTimer = 0.4
