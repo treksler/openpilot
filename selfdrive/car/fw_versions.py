@@ -116,6 +116,12 @@ class Request:
 
 
 REQUESTS: List[Request] = [
+  # Subaru
+  Request(
+    "subaru",
+    [TESTER_PRESENT_REQUEST, SUBARU_VERSION_REQUEST],
+    [TESTER_PRESENT_RESPONSE, SUBARU_VERSION_RESPONSE],
+  ),
   # Hyundai
   Request(
     "hyundai",
@@ -171,12 +177,6 @@ REQUESTS: List[Request] = [
     "mazda",
     [MAZDA_VERSION_REQUEST],
     [MAZDA_VERSION_RESPONSE],
-  ),
-  # Subaru
-  Request(
-    "subaru",
-    [TESTER_PRESENT_REQUEST, SUBARU_VERSION_REQUEST],
-    [TESTER_PRESENT_RESPONSE, SUBARU_VERSION_RESPONSE],
   ),
   # Nissan
   Request(
