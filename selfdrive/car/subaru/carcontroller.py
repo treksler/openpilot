@@ -145,6 +145,7 @@ class CarController:
         self.last_cancel_frame = self.frame
 
       if self.es_distance_cnt != CS.es_distance_msg["COUNTER"]:
+        bus = 1 if self.CP.carFingerprint in GLOBAL_GEN2 else 0
         can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, bus, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
         self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
 
