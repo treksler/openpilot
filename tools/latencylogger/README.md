@@ -19,70 +19,74 @@ optional arguments:
   --relative            Make timestamps relative to the start of each frame (default: False)
   --demo                Use the demo route instead of providing one (default: False)
   --plot                If a plot should be generated (default: False)
+  --offset              Offset service to better visualize overlap (default: False)
 ```
+To timestamp an event, use `LOGT("msg")` in c++ code or `cloudlog.timestamp("msg")` in python code. If the print is warning for frameId assignment ambiguity, use `LOGT(frameId ,"msg")`.
 
 ## Examples
-Plotting with relative starts each process at time=0 and gives a nice overview. Timestamps are visualized as diamonds. The opacity allows for visualization of overlapping services.
-![relplot-1](https://user-images.githubusercontent.com/42323981/162108651-e0beee14-56e4-466d-8af1-cb37129fd94a.png)
 
-Plotting without relative provides info about the frames relative time.
-![plot-1](https://user-images.githubusercontent.com/42323981/162108694-fbfe907b-a1ee-4cc7-bc8b-162a7d9305d4.png)
+Timestamps are visualized as diamonds
 
+|  | Relative  | Absolute |
+| ------------- | ------------- | ------------- |
+| Inline | ![inrel](https://user-images.githubusercontent.com/42323981/170559939-465df3b1-bf87-46d5-b5ee-5cc87dc49470.png) | ![inabs](https://user-images.githubusercontent.com/42323981/170559985-a82f87e7-82c4-4e48-a348-4221568dd589.png) |
+| Offset | ![offrel](https://user-images.githubusercontent.com/42323981/170559854-93fba90f-acc4-4d08-b317-d3f8fc649ea8.png) | ![offabs](https://user-images.githubusercontent.com/42323981/170559782-06ed5599-d4e3-4701-ad78-5c1eec6cb61e.png) |
 
 Printed timestamps of a frame with internal durations.
 ```
-Frame ID: 303
+Frame ID: 1202
   camerad
-    roadCameraState start of frame                       0.0
-    wideRoadCameraState start of frame                   0.091926
-    RoadCamera: Image set                                1.691696
-    RoadCamera: Transformed                              1.812841
-    roadCameraState published                            51.775466
-    wideRoadCameraState published                        54.935164
-    roadCameraState.processingTime                       1.6455530421808362
-    wideRoadCameraState.processingTime                   4.790564067661762
+    wideRoadCameraState start of frame                   0.0
+    roadCameraState start of frame                       0.049583
+    wideRoadCameraState published                        35.01206
+    WideRoadCamera: Image set                            35.020028
+    roadCameraState published                            38.508261
+    RoadCamera: Image set                                38.520344
+    RoadCamera: Transformed                              38.616176
+    wideRoadCameraState.processingTime                   3.152403049170971
+    roadCameraState.processingTime                       6.453451234847307
   modeld
-    Image added                                          56.628788
-    Extra image added                                    57.459923
-    Execution finished                                   75.091306
-    modelV2 published                                    75.24797
-    modelV2.modelExecutionTime                           20.00947669148445
+    Image added                                          40.909841
+    Extra image added                                    42.515027
+    Execution finished                                   63.002552
+    modelV2 published                                    63.148747
+    modelV2.modelExecutionTime                           23.62649142742157
     modelV2.gpuExecutionTime                             0.0
   plannerd
-    lateralPlan published                                80.426861
-    longitudinalPlan published                           85.722781
-    lateralPlan.solverExecutionTime                      1.0600379901006818
-    longitudinalPlan.solverExecutionTime                 1.3830000534653664
+    lateralPlan published                                66.915049
+    longitudinalPlan published                           69.715999
+    lateralPlan.solverExecutionTime                      0.8170719956979156
+    longitudinalPlan.solverExecutionTime                 0.5619999719783664
   controlsd
-    Data sampled                                         89.436221
-    Events updated                                       90.356522
-    sendcan published                                    91.396092
-    controlsState published                              91.77843
-    Data sampled                                         99.885876
-    Events updated                                       100.696855
-    sendcan published                                    101.600489
-    controlsState published                              101.941839
-    Data sampled                                         110.087669
-    Events updated                                       111.025365
-    sendcan published                                    112.305921
-    controlsState published                              112.70451
-    Data sampled                                         119.692803
-    Events updated                                       120.56774
-    sendcan published                                    121.735016
-    controlsState published                              122.142823
-    Data sampled                                         129.264761
-    Events updated                                       130.024282
-    sendcan published                                    130.950364
-    controlsState published                              131.281558
+    Data sampled                                         70.217763
+    Events updated                                       71.037178
+    sendcan published                                    72.278775
+    controlsState published                              72.825226
+    Data sampled                                         80.008354
+    Events updated                                       80.787666
+    sendcan published                                    81.849682
+    controlsState published                              82.238323
+    Data sampled                                         90.521123
+    Events updated                                       91.626003
+    sendcan published                                    93.413218
+    controlsState published                              94.143989
+    Data sampled                                         100.991497
+    Events updated                                       101.973774
+    sendcan published                                    103.565575
+    controlsState published                              104.146088
+    Data sampled                                         110.284387
+    Events updated                                       111.183541
+    sendcan published                                    112.981692
+    controlsState published                              113.731994
   boardd
-    sending sendcan to panda: 250027001751393037323631   101.705487
-    sendcan sent to panda: 250027001751393037323631      102.042462
-    sending sendcan to panda: 250027001751393037323631   112.416961
-    sendcan sent to panda: 250027001751393037323631      112.792269
-    sending sendcan to panda: 250027001751393037323631   121.850952
-    sendcan sent to panda: 250027001751393037323631      122.231103
-    sending sendcan to panda: 250027001751393037323631   131.045206
-    sendcan sent to panda: 250027001751393037323631      131.351296
-    sending sendcan to panda: 250027001751393037323631   141.340592
-    sendcan sent to panda: 250027001751393037323631      141.700744
+    sending sendcan to panda: 250027001751393037323631   81.928119
+    sendcan sent to panda: 250027001751393037323631      82.164834
+    sending sendcan to panda: 250027001751393037323631   93.569986
+    sendcan sent to panda: 250027001751393037323631      93.92795
+    sending sendcan to panda: 250027001751393037323631   103.689167
+    sendcan sent to panda: 250027001751393037323631      104.012235
+    sending sendcan to panda: 250027001751393037323631   113.109555
+    sendcan sent to panda: 250027001751393037323631      113.525487
+    sending sendcan to panda: 250027001751393037323631   122.508434
+    sendcan sent to panda: 250027001751393037323631      122.834314
 ```

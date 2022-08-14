@@ -4,7 +4,7 @@ import numpy as np
 
 from common.realtime import sec_since_boot
 from common.numpy_fast import clip, interp
-from selfdrive.swaglog import cloudlog
+from system.swaglog import cloudlog
 from selfdrive.modeld.constants import index_function
 from selfdrive.controls.lib.radar_helpers import _LEAD_ACCEL_TAU
 
@@ -281,7 +281,7 @@ class LongitudinalMpc:
       self.solver.cost_set(i, 'Zl', Zl)
 
   def set_weights_for_xva_policy(self):
-    W = np.asfortranarray(np.diag([0., 10., 1., 10., 0.0, 1.]))
+    W = np.asfortranarray(np.diag([0., 0.2, 0.25, 1., 0.0, .1]))
     for i in range(N):
       self.solver.cost_set(i, 'W', W)
     # Setting the slice without the copy make the array not contiguous,
@@ -378,6 +378,11 @@ class LongitudinalMpc:
       self.crash_cnt = 0
 
   def update_with_xva(self, x, v, a):
+    # v, and a are in local frame, but x is wrt the x[0] position
+    # In >90degree turns, x goes to 0 (and may even be -ve)
+    # So, we use integral(v) + x[0] to obtain the forward-distance
+    xforward = ((v[1:] + v[:-1]) / 2) * (T_IDXS[1:] - T_IDXS[:-1])
+    x = np.cumsum(np.insert(xforward, 0, x[0]))
     self.yref[:,1] = x
     self.yref[:,2] = v
     self.yref[:,3] = a

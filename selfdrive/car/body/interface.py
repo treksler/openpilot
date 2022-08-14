@@ -17,8 +17,8 @@ class CarInterface(CarInterfaceBase):
     ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.body)]
 
     ret.minSteerSpeed = -math.inf
+    ret.maxLateralAccel = math.inf  # TODO: set to a reasonable value
     ret.steerRatio = 0.5
-    ret.steerRateCost = 0.5
     ret.steerLimitTimer = 1.0
     ret.steerActuatorDelay = 0.
 
@@ -37,12 +37,8 @@ class CarInterface(CarInterfaceBase):
 
     return ret
 
-  def update(self, c, can_strings):
-    self.cp.update_strings(can_strings)
-
+  def _update(self, c):
     ret = self.CS.update(self.cp)
-
-    ret.canValid = self.cp.can_valid
 
     # wait for everything to init first
     if self.frame > int(5. / DT_CTRL):
@@ -52,8 +48,7 @@ class CarInterface(CarInterfaceBase):
       ret.events[0].enable = True
     self.frame += 1
 
-    self.CS.out = ret.as_reader()
-    return self.CS.out
+    return ret
 
   def apply(self, c):
     return self.CC.update(c, self.CS)

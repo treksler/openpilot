@@ -1,8 +1,8 @@
 from common.numpy_fast import clip
+from opendbc.can.packer import CANPacker
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.subaru import subarucan
-from selfdrive.car.subaru.values import DBC, PREGLOBAL_CARS, CarControllerParams
-from opendbc.can.packer import CANPacker
+from selfdrive.car.subaru.values import DBC, GLOBAL_GEN2, PREGLOBAL_CARS, CarControllerParams
 
 ACCEL_HYST_GAP = 10  # don't change accel command for small oscilalitons within this value
 
@@ -20,15 +20,17 @@ def accel_hysteresis(accel, accel_steady):
 def compute_gb(accel):
   return clip(accel/4.0, 0.0, 1.0), clip(-accel/4.0, 0.0, 1.0)
 
-class CarController():
+class CarController:
   def __init__(self, dbc_name, CP, VM):
     self.CP = CP
     self.apply_steer_last = 0
+    self.frame = 0
+
     self.es_lkas_state_cnt = -1
+    self.es_distance_cnt = -1
     self.es_dashstatus_cnt = -1
     self.cruise_control_cnt = -1
     self.brake_status_cnt = -1
-    self.es_distance_cnt = -1
     self.es_status_cnt = -1
     self.es_brake_cnt = -1
     self.cruise_button_prev = 0
@@ -38,15 +40,20 @@ class CarController():
     self.rpm_steady = 0
     self.throttle_steady = 0
 
+    self.last_cancel_frame = 0
+
     self.p = CarControllerParams(CP)
     self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
 
-  def update(self, c, CS, frame, actuators, pcm_cancel_cmd, visual_alert, left_line, right_line, left_lane_depart, right_lane_depart, lead_visible):
+  def update(self, CC, CS):
+    actuators = CC.actuators
+    hud_control = CC.hudControl
+    pcm_cancel_cmd = CC.cruiseControl.cancel
 
     can_sends = []
 
     # *** steering ***
-    if (frame % self.p.STEER_STEP) == 0:
+    if (self.frame % self.p.STEER_STEP) == 0:
 
       apply_steer = int(round(actuators.steer * self.p.STEER_MAX))
 
@@ -54,15 +61,14 @@ class CarController():
 
       new_steer = int(round(apply_steer))
       apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, self.p)
-      self.steer_rate_limited = new_steer != apply_steer
 
-      if not c.latActive:
+      if not CC.latActive:
         apply_steer = 0
 
       if self.CP.carFingerprint in PREGLOBAL_CARS:
-        can_sends.append(subarucan.create_preglobal_steering_control(self.packer, apply_steer, frame, self.p.STEER_STEP))
+        can_sends.append(subarucan.create_preglobal_steering_control(self.packer, apply_steer))
       else:
-        can_sends.append(subarucan.create_steering_control(self.packer, apply_steer, frame, self.p.STEER_STEP))
+        can_sends.append(subarucan.create_steering_control(self.packer, apply_steer))
 
       self.apply_steer_last = apply_steer
 
@@ -84,16 +90,16 @@ class CarController():
       #  print("wipers set brake 0.5")
       #  brake_cmd = True
 
-      if c.longActive and brake > 0:
+      if CC.longActive and brake > 0:
         brake_value = clip(int(brake * CarControllerParams.BRAKE_SCALE), CarControllerParams.BRAKE_MIN, CarControllerParams.BRAKE_MAX)
         brake_cmd = True
         #print('brake: %s, es_brake_pressure: %s es_brake_active: %s brake_value: %s' % (brake, CS.es_brake_pressure, CS.es_brake_active, brake_value))
 
       # PCB passthrough
-      if c.enabled and CS.es_brake_active:
+      if CC.enabled and CS.es_brake_active:
         brake_cmd = False
 
-      if c.longActive and gas > 0:
+      if CC.longActive and gas > 0:
         # limit min and max values
         cruise_throttle = clip(int(CarControllerParams.THROTTLE_BASE + (gas * CarControllerParams.THROTTLE_SCALE)), CarControllerParams.THROTTLE_MIN, CarControllerParams.THROTTLE_MAX)
         cruise_rpm = clip(int(CarControllerParams.RPM_BASE + (gas * CarControllerParams.RPM_SCALE)), CarControllerParams.RPM_MIN, CarControllerParams.RPM_MAX)
@@ -113,7 +119,7 @@ class CarController():
     # *** alerts and pcm cancel ***
 
     if self.CP.carFingerprint in PREGLOBAL_CARS:
-      if self.es_distance_cnt != CS.es_distance_msg["Counter"]:
+      if self.es_distance_cnt != CS.es_distance_msg["COUNTER"]:
         # 1 = main, 2 = set shallow, 3 = set deep, 4 = resume shallow, 5 = resume deep
         # disengage ACC when OP is disengaged
         if pcm_cancel_cmd:
@@ -130,38 +136,47 @@ class CarController():
         self.cruise_button_prev = cruise_button
 
         can_sends.append(subarucan.create_preglobal_es_distance(self.packer, cruise_button, CS.es_distance_msg))
-        self.es_distance_cnt = CS.es_distance_msg["Counter"]
+        self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
 
     else:
-      if self.es_distance_cnt != CS.es_distance_msg["Counter"]:
-        can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, c.longActive, pcm_cancel_cmd, brake_cmd, brake_value, cruise_throttle))
-        self.es_distance_cnt = CS.es_distance_msg["Counter"]
+      if pcm_cancel_cmd and (self.frame - self.last_cancel_frame) > 0.2:
+        bus = 1 if self.CP.carFingerprint in GLOBAL_GEN2 else 0
+        can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, bus, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
+        self.last_cancel_frame = self.frame
 
-      if self.es_status_cnt != CS.es_status_msg["Counter"]:
-        can_sends.append(subarucan.create_es_status(self.packer, CS.es_status_msg, c.longActive, cruise_rpm))
-        self.es_status_cnt = CS.es_status_msg["Counter"]
+      if self.es_distance_cnt != CS.es_distance_msg["COUNTER"]:
+        can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, bus, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
+        self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
 
-      if self.es_dashstatus_cnt != CS.es_dashstatus_msg["Counter"]:
-        can_sends.append(subarucan.create_es_dashstatus(self.packer, CS.es_dashstatus_msg, c.enabled, lead_visible))
-        self.es_dashstatus_cnt = CS.es_dashstatus_msg["Counter"]
+      if self.es_status_cnt != CS.es_status_msg["COUNTER"]:
+        can_sends.append(subarucan.create_es_status(self.packer, CS.es_status_msg, CC.longActive, cruise_rpm))
+        self.es_status_cnt = CS.es_status_msg["COUNTER"]
 
-      if self.es_lkas_state_cnt != CS.es_lkas_state_msg["Counter"]:
-        can_sends.append(subarucan.create_es_lkas_state(self.packer, CS.es_lkas_state_msg, c.enabled, visual_alert, left_line, right_line, left_lane_depart, right_lane_depart))
-        self.es_lkas_state_cnt = CS.es_lkas_state_msg["Counter"]
+      if self.es_dashstatus_cnt != CS.es_dashstatus_msg["COUNTER"]:
+        can_sends.append(subarucan.create_es_dashstatus(self.packer, CS.es_dashstatus_msg, CC.enabled, hud_control.leadVisible))
+        self.es_dashstatus_cnt = CS.es_dashstatus_msg["COUNTER"]
 
-      if self.es_brake_cnt != CS.es_brake_msg["Counter"]:
-        can_sends.append(subarucan.create_es_brake(self.packer, CS.es_brake_msg, c.enabled, brake_cmd, brake_value))
-        self.es_brake_cnt = CS.es_brake_msg["Counter"]
+      if self.es_lkas_state_cnt != CS.es_lkas_state_msg["COUNTER"]:
+        can_sends.append(subarucan.create_es_lkas_state(self.packer, CS.es_lkas_state_msg, CC.enabled, hud_control.visualAlert,
+                                                  hud_control.leftLaneVisible, hud_control.rightLaneVisible,
+                                                  hud_control.leftLaneDepart, hud_control.rightLaneDepart))
+        self.es_lkas_state_cnt = CS.es_lkas_state_msg["COUNTER"]
 
-      if self.cruise_control_cnt != CS.cruise_control_msg["Counter"]:
+      if self.es_brake_cnt != CS.es_brake_msg["COUNTER"]:
+        can_sends.append(subarucan.create_es_brake(self.packer, CS.es_brake_msg, CC.enabled, brake_cmd, brake_value))
+        self.es_brake_cnt = CS.es_brake_msg["COUNTER"]
+
+      if self.cruise_control_cnt != CS.cruise_control_msg["COUNTER"]:
         can_sends.append(subarucan.create_cruise_control(self.packer, CS.cruise_control_msg))
-        self.cruise_control_cnt = CS.cruise_control_msg["Counter"]
+        self.cruise_control_cnt = CS.cruise_control_msg["COUNTER"]
 
-      if self.brake_status_cnt != CS.brake_status_msg["Counter"]:
+      if self.brake_status_cnt != CS.brake_status_msg["COUNTER"]:
         can_sends.append(subarucan.create_brake_status(self.packer, CS.brake_status_msg, CS.es_brake_active))
-        self.brake_status_cnt = CS.brake_status_msg["Counter"]
+        self.brake_status_cnt = CS.brake_status_msg["COUNTER"]
+
 
     new_actuators = actuators.copy()
     new_actuators.steer = self.apply_steer_last / self.p.STEER_MAX
 
+    self.frame += 1
     return new_actuators, can_sends
