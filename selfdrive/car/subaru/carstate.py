@@ -90,7 +90,7 @@ class CarState(CarStateBase):
       self.es_lkas_state_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.es_brake_msg = copy.copy(cp_cam.vl["ES_Brake"])
       self.es_status_msg = copy.copy(cp_cam.vl["ES_Status"])
-      self.cruise_control_msg = copy.copy(cp.vl["CruiseControl"])
+      self.cruise_control_msg = copy.copy(cp_cruise.vl["CruiseControl"])
       self.brake_status_msg = copy.copy(cp_brakes.vl["Brake_Status"])
     cp_es_distance = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp_cam
     self.es_distance_msg = copy.copy(cp_es_distance.vl["ES_Distance"])
@@ -101,13 +101,22 @@ class CarState(CarStateBase):
   @staticmethod
   def get_common_global_signals():
     signals = [
+      ("COUNTER", "CruiseControl"),
+      ("Signal1", "CruiseControl"),
       ("Cruise_On", "CruiseControl"),
       ("Cruise_Activated", "CruiseControl"),
+      ("Signal2", "CruiseControl"),
       ("FL", "Wheel_Speeds"),
       ("FR", "Wheel_Speeds"),
       ("RL", "Wheel_Speeds"),
       ("RR", "Wheel_Speeds"),
       ("Brake", "Brake_Status"),
+      ("COUNTER", "Brake_Status"),
+      ("Signal1", "Brake_Status"),
+      ("ES_Brake", "Brake_Status"),
+      ("Signal2", "Brake_Status"),
+      ("Brake", "Brake_Status"),
+      ("Signal3", "Brake_Status"),
     ]
     checks = [
       ("CruiseControl", 20),
@@ -154,11 +163,6 @@ class CarState(CarStateBase):
       ("Steer_Torque_Output", "Steering_Torque"),
       ("Steering_Angle", "Steering_Torque"),
       ("Steer_Error_1", "Steering_Torque"),
-      ("Counter", "CruiseControl"),
-      ("Signal1", "CruiseControl"),
-      ("Cruise_On", "CruiseControl"),
-      ("Cruise_Activated", "CruiseControl"),
-      ("Signal2", "CruiseControl"),
       ("Brake_Pedal", "Brake_Pedal"),
       ("Throttle_Pedal", "Throttle"),
       ("Throttle_Cruise", "Throttle"),
@@ -200,12 +204,6 @@ class CarState(CarStateBase):
       signals += [
         ("Steer_Warning", "Steering_Torque"),
         ("RPM", "Transmission"),
-        ("Counter", "Brake_Status"),
-        ("Signal1", "Brake_Status"),
-        ("ES_Brake", "Brake_Status"),
-        ("Signal2", "Brake_Status"),
-        ("Brake", "Brake_Status"),
-        ("Signal3", "Brake_Status"),
         ("UNITS", "Dashlights"),
       ]
 
@@ -277,7 +275,7 @@ class CarState(CarStateBase):
       ]
     else:
       signals = [
-        ("Counter", "ES_DashStatus"),
+        ("COUNTER", "ES_DashStatus"),
         ("PCB_Off", "ES_DashStatus"),
         ("LDW_Off", "ES_DashStatus"),
         ("Signal1", "ES_DashStatus"),
@@ -320,7 +318,7 @@ class CarState(CarStateBase):
         ("LKAS_Alert", "ES_LKAS_State"),
         ("Signal3", "ES_LKAS_State"),
 
-        ("Counter", "ES_Status"),
+        ("COUNTER", "ES_Status"),
         ("Signal1", "ES_Status"),
         ("Cruise_Fault", "ES_Status"),
         ("Cruise_RPM", "ES_Status"),
@@ -330,7 +328,7 @@ class CarState(CarStateBase):
         ("Cruise_Hold", "ES_Status"),
         ("Signal3", "ES_Status"),
 
-        ("Counter", "ES_Brake"),
+        ("COUNTER", "ES_Brake"),
         ("Signal1", "ES_Brake"),
         ("Brake_Pressure", "ES_Brake"),
         ("Signal2", "ES_Brake"),
