@@ -71,6 +71,9 @@ class CarState(CarStateBase):
                         cp.vl["BodyInfo"]["DOOR_OPEN_FL"]])
     ret.steerFaultPermanent = cp.vl["Steering_Torque"]["Steer_Error_1"] == 1
 
+    cp_es_distance = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp_cam
+    self.es_cruise_throttle = cp_es_distance.vl["ES_Distance"]["Cruise_Throttle"]
+
     if self.car_fingerprint in PREGLOBAL_CARS:
       self.cruise_button = cp_cam.vl["ES_Distance"]["Cruise_Button"]
       self.ready = not cp_cam.vl["ES_DashStatus"]["Not_Ready_Startup"]
@@ -79,7 +82,6 @@ class CarState(CarStateBase):
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]["Conventional_Cruise"] == 1
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.throttle_cruise = cp.vl["Throttle"]["Throttle_Cruise"]
-      self.es_cruise_throttle = cp_cam.vl["ES_Distance"]["Cruise_Throttle"]
       self.wipers = cp.vl["BodyInfo"]["WIPERS"]
 
       self.es_brake_pressure = cp_cam.vl["ES_Brake"]["Brake_Pressure"]
@@ -92,7 +94,6 @@ class CarState(CarStateBase):
       self.es_status_msg = copy.copy(cp_cam.vl["ES_Status"])
       self.cruise_control_msg = copy.copy(cp_cruise.vl["CruiseControl"])
       self.brake_status_msg = copy.copy(cp_brakes.vl["Brake_Status"])
-    cp_es_distance = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp_cam
     self.es_distance_msg = copy.copy(cp_es_distance.vl["ES_Distance"])
     self.es_dashstatus_msg = copy.copy(cp_cam.vl["ES_DashStatus"])
 
@@ -256,8 +257,6 @@ class CarState(CarStateBase):
         ("Distance_Swap", "ES_Distance"),
         ("Standstill", "ES_Distance"),
         ("Signal3", "ES_Distance"),
-        ("Cruise_Soft_Disable", "ES_Distance"),
-        ("Signal7", "ES_Distance"),
         ("Close_Distance", "ES_Distance"),
         ("Signal4", "ES_Distance"),
         ("Standstill_2", "ES_Distance"),
