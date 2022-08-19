@@ -41,6 +41,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.0025, 0.1], [0.00025, 0.01]]
 
     elif candidate == CAR.IMPREZA:
+      ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
       ret.mass = 1568. + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5
@@ -80,6 +81,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.01, 0.065, 0.2], [0.001, 0.015, 0.025]]
 
     elif candidate == CAR.CROSSTREK:
+      ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
       ret.mass = 1470. + STD_CARGO_KG
       ret.wheelbase = 2.635
       ret.centerToFront = ret.wheelbase * 0.5
