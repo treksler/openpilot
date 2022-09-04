@@ -30,21 +30,6 @@ def create_es_distance(packer, es_distance_msg, bus, pcm_cancel_cmd, long_active
 
   return packer.make_can_msg("ES_Distance", bus, values)
 
-def create_es_dashstatus(packer, es_dashstatus_msg, enabled, lead_visible):
-
-  values = copy.copy(es_dashstatus_msg)
-  if enabled:
-    values["Cruise_State"] = 0
-    values["Cruise_Activated"] = 1
-    values["Cruise_Disengaged"] = 0
-    values["Car_Follow"] = int(lead_visible)
-
-  # Filter stock LKAS disabled and Keep hands on steering wheel OFF alerts
-  if values["LKAS_State_Msg"] in [2, 3]:
-    values["LKAS_State_Msg"] = 0
-
-  return packer.make_can_msg("ES_DashStatus", 0, values)
-
 def create_es_lkas_state(packer, es_lkas_msg, enabled, visual_alert, left_line, right_line, left_lane_depart, right_lane_depart):
 
   values = copy.copy(es_lkas_msg)
@@ -90,6 +75,21 @@ def create_es_lkas_state(packer, es_lkas_msg, enabled, visual_alert, left_line, 
   values["LKAS_Right_Line_Visible"] = int(right_line)
 
   return packer.make_can_msg("ES_LKAS_State", 0, values)
+
+def create_es_dashstatus(packer, es_dashstatus_msg, enabled, lead_visible):
+
+  values = copy.copy(es_dashstatus_msg)
+  if enabled:
+    values["Cruise_State"] = 0
+    values["Cruise_Activated"] = 1
+    values["Cruise_Disengaged"] = 0
+    values["Car_Follow"] = int(lead_visible)
+
+  # Filter stock LKAS disabled and Keep hands on steering wheel OFF alerts
+  if values["LKAS_State_Msg"] in [2, 3]:
+    values["LKAS_State_Msg"] = 0
+
+  return packer.make_can_msg("ES_DashStatus", 0, values)
 
 def create_es_brake(packer, es_brake_msg, enabled, brake_cmd, brake_value):
 

@@ -111,7 +111,6 @@ class CarState(CarStateBase):
       ("FR", "Wheel_Speeds"),
       ("RL", "Wheel_Speeds"),
       ("RR", "Wheel_Speeds"),
-      ("Brake", "Brake_Status"),
       ("COUNTER", "Brake_Status"),
       ("Signal1", "Brake_Status"),
       ("ES_Brake", "Brake_Status"),
@@ -341,7 +340,6 @@ class CarState(CarStateBase):
 
       checks = [
         ("ES_DashStatus", 10),
-        ("ES_Distance", 20),
         ("ES_Status", 20),
         ("ES_Brake", 20),
         ("ES_LKAS_State", 10),
