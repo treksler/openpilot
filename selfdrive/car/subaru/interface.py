@@ -15,6 +15,7 @@ class CarInterface(CarInterfaceBase):
     ret.carName = "subaru"
     ret.radarOffCan = True
     ret.dashcamOnly = candidate in PREGLOBAL_CARS
+    ret.autoResumeSng = False
 
     if candidate in PREGLOBAL_CARS:
       ret.enableBsm = 0x25c in fingerprint[0]
@@ -102,7 +103,7 @@ class CarInterface(CarInterfaceBase):
       if ret.openpilotLongitudinalControl:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
 
-    elif candidate == CAR.OUTBACK:
+    elif candidate in (CAR.OUTBACK, CAR.LEGACY):
       ret.mass = 1568. + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5
