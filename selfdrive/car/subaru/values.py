@@ -25,7 +25,7 @@ class CarControllerParams:
     elif CP.carFingerprint == CAR.IMPREZA_2020:
       self.STEER_MAX = 1439
     else:
-      self.STEER_MAX = 2047
+      self.STEER_MAX = 3071
 
   RPM_MIN = 0                   # min cruise_rpm
   RPM_MAX = 3200                # max cruise_rpm
