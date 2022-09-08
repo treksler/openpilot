@@ -128,7 +128,7 @@ FW_VERSIONS = {
   CAR.CROSSTREK: {
     # 2018 Crosstrek EDM
     # Ecu, addr, subaddr: ROM ID
-    (Ecu.esp, 0x7b0, None): [
+    (Ecu.abs, 0x7b0, None): [
       b'\x7a\x94\x3f\x90\x00',
     ],
     (Ecu.eps, 0x746, None): [
@@ -168,7 +168,6 @@ FW_VERSIONS = {
   },
   CAR.IMPREZA: {
     (Ecu.abs, 0x7b0, None): [
-      b'\x7a\x94\x3f\x90\x00',
       b'\xa2 \x185\x00',
       b'\xa2 \x193\x00',
       b'\xa2 \x194\x00',
