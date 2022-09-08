@@ -139,16 +139,6 @@ class CarController:
         self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
 
     else:
-      if pcm_cancel_cmd and (self.frame - self.last_cancel_frame) > 0.2:
-        bus = 1 if self.CP.carFingerprint in GLOBAL_GEN2 else 0
-        can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, bus, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
-        self.last_cancel_frame = self.frame
-
-      if self.es_distance_cnt != CS.es_distance_msg["COUNTER"]:
-        bus = 1 if self.CP.carFingerprint in GLOBAL_GEN2 else 0
-        can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, bus, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
-        self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
-
       if self.es_dashstatus_cnt != CS.es_dashstatus_msg["COUNTER"]:
         can_sends.append(subarucan.create_es_dashstatus(self.packer, CS.es_dashstatus_msg, CC.enabled, hud_control.leadVisible))
         self.es_dashstatus_cnt = CS.es_dashstatus_msg["COUNTER"]
@@ -176,6 +166,15 @@ class CarController:
           can_sends.append(subarucan.create_brake_status(self.packer, CS.brake_status_msg, CS.es_brake_active))
           self.brake_status_cnt = CS.brake_status_msg["COUNTER"]
 
+        if self.es_distance_cnt != CS.es_distance_msg["COUNTER"]:
+          can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, 0, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
+          self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
+
+      else:
+        if pcm_cancel_cmd and (self.frame - self.last_cancel_frame) > 0.2:
+          bus = 1 if self.CP.carFingerprint in GLOBAL_GEN2 else 0
+          can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, bus, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle))
+          self.last_cancel_frame = self.frame
 
     new_actuators = actuators.copy()
     new_actuators.steer = self.apply_steer_last / self.p.STEER_MAX
