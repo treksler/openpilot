@@ -9,7 +9,7 @@ from selfdrive.car.subaru.values import CAR, GLOBAL_GEN2, PREGLOBAL_CARS
 class CarInterface(CarInterfaceBase):
 
   @staticmethod
-  def get_params(candidate, fingerprint=gen_empty_fingerprint(), car_fw=None, disable_radar=False):
+  def get_params(candidate, fingerprint=gen_empty_fingerprint(), car_fw=None, experimental_long=False):
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint)
 
     ret.carName = "subaru"
@@ -41,7 +41,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 20.], [0., 20.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.0025, 0.1], [0.00025, 0.01]]
 
-    elif candidate == CAR.IMPREZA:
+    elif candidate in (CAR.IMPREZA, CAR.CROSSTREK):
       ret.mass = 1568. + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5
@@ -52,13 +52,13 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 20.], [0., 20.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.2, 0.3], [0.02, 0.03]]
       # longitudinal
-      ret.longitudinalTuning.kpBP = [0., 3., 35.]
-      ret.longitudinalTuning.kpV = [0.7, 1.2, 1.5]
+      ret.longitudinalTuning.kpBP = [0., 5., 35.]
+      ret.longitudinalTuning.kpV = [0.8, 1.0, 1.5]
       ret.longitudinalTuning.kiBP = [0., 35.]
       ret.longitudinalTuning.kiV = [0.54, 0.36]
 
       ret.stoppingControl = True
-      ret.openpilotLongitudinalControl = disable_radar
+      ret.openpilotLongitudinalControl = experimental_long
       if ret.openpilotLongitudinalControl:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
 
@@ -81,27 +81,6 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kf = 0.000038
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 14., 23.], [0., 14., 23.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.01, 0.065, 0.2], [0.001, 0.015, 0.025]]
-
-    elif candidate == CAR.CROSSTREK:
-      ret.mass = 1470. + STD_CARGO_KG
-      ret.wheelbase = 2.635
-      ret.centerToFront = ret.wheelbase * 0.5
-      ret.steerRatio = 15  # spec = 13
-      ret.steerActuatorDelay = 0.4   # end-to-end angle controller
-      ret.lateralTuning.init('pid')
-      ret.lateralTuning.pid.kf = 0.00005
-      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 20.], [0., 20.]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.2, 0.3], [0.02, 0.03]]
-      # longitudinal
-      ret.longitudinalTuning.kpBP = [0., 5., 35.]
-      ret.longitudinalTuning.kpV = [0.8, 1.0, 1.5]
-      ret.longitudinalTuning.kiBP = [0., 35.]
-      ret.longitudinalTuning.kiV = [0.54, 0.36]
-
-      ret.stoppingControl = True
-      ret.openpilotLongitudinalControl = disable_radar
-      if ret.openpilotLongitudinalControl:
-        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
 
     elif candidate in (CAR.OUTBACK, CAR.LEGACY):
       ret.mass = 1568. + STD_CARGO_KG
