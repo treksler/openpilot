@@ -117,7 +117,6 @@ class CarState(CarStateBase):
       ("Signal1", "Brake_Status"),
       ("ES_Brake", "Brake_Status"),
       ("Signal2", "Brake_Status"),
-      ("Signal4", "Brake_Status"),
       ("Brake", "Brake_Status"),
       ("Signal3", "Brake_Status"),
     ]
