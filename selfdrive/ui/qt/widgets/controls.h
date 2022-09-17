@@ -45,8 +45,17 @@ public:
     title_label->setText(title);
   }
 
+  void setValue(const QString &val) {
+    value->setText(val);
+  }
+
+public slots:
+  void showDescription() {
+    description->setVisible(true);
+  };
+
 signals:
-  void showDescription();
+  void showDescriptionEvent();
 
 protected:
   AbstractControl(const QString &title, const QString &desc = "", const QString &icon = "", QWidget *parent = nullptr);
@@ -54,6 +63,9 @@ protected:
 
   QHBoxLayout *hlayout;
   QPushButton *title_label;
+
+private:
+  QLabel *value;
   QLabel *description = nullptr;
 };
 
@@ -165,7 +177,7 @@ private:
     p.setPen(Qt::gray);
     for (int i = 0; i < inner_layout.count() - 1; ++i) {
       QWidget *widget = inner_layout.itemAt(i)->widget();
-      if (widget->isVisible()) {
+      if (widget == nullptr || widget->isVisible()) {
         QRect r = inner_layout.itemAt(i)->geometry();
         int bottom = r.bottom() + inner_layout.spacing() / 2;
         p.drawLine(r.left() + 40, bottom, r.right() - 40, bottom);
