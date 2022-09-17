@@ -51,17 +51,6 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kf = 0.00005
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 20.], [0., 20.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.2, 0.3], [0.02, 0.03]]
-      # longitudinal
-      ret.longitudinalTuning.kpBP = [0., 5., 35.]
-      ret.longitudinalTuning.kpV = [0.8, 1.0, 1.5]
-      ret.longitudinalTuning.kiBP = [0., 35.]
-      ret.longitudinalTuning.kiV = [0.54, 0.36]
-
-      ret.stoppingControl = True
-      ret.experimentalLongitudinalAvailable = candidate not in (GLOBAL_GEN2 | PREGLOBAL_CARS)
-      ret.openpilotLongitudinalControl = experimental_long
-      if ret.openpilotLongitudinalControl:
-        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
 
     elif candidate == CAR.IMPREZA_2020:
       ret.mass = 1480. + STD_CARGO_KG
@@ -113,6 +102,19 @@ class CarInterface(CarInterfaceBase):
 
     else:
       raise ValueError(f"unknown car: {candidate}")
+
+    # longitudinal
+    ret.experimentalLongitudinalAvailable = candidate not in (GLOBAL_GEN2 | PREGLOBAL_CARS)
+    if experimental_long and ret.experimentalLongitudinalAvailable:
+      ret.longitudinalTuning.kpBP = [0., 5., 35.]
+      ret.longitudinalTuning.kpV = [0.8, 1.0, 1.5]
+      ret.longitudinalTuning.kiBP = [0., 35.]
+      ret.longitudinalTuning.kiV = [0.54, 0.36]
+
+      ret.stoppingControl = True
+      ret.openpilotLongitudinalControl = experimental_long
+      if ret.openpilotLongitudinalControl:
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
 
     # TODO: get actual value, for now starting with reasonable value for
     # civic and scaling by mass and wheelbase
