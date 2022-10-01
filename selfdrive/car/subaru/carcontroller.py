@@ -84,16 +84,9 @@ class CarController:
 
       gas, brake = compute_gb(actuators.accel)
 
-      # Manual trigger using wipers signal
-      #if CS.wipers:
-      #  brake = 0.5
-      #  print("wipers set brake 0.5")
-      #  brake_cmd = True
-
       if CC.longActive and brake > 0:
         brake_value = clip(int(brake * CarControllerParams.BRAKE_SCALE), CarControllerParams.BRAKE_MIN, CarControllerParams.BRAKE_MAX)
         brake_cmd = True
-        #print('brake: %s, es_brake_pressure: %s es_brake_active: %s brake_value: %s' % (brake, CS.es_brake_pressure, CS.es_brake_active, brake_value))
 
       # PCB passthrough
       if CC.enabled and CS.es_brake_active:
@@ -113,8 +106,6 @@ class CarController:
 
         self.cruise_throttle_last = cruise_throttle
         self.cruise_rpm_last = cruise_rpm
-
-        #print('gas: %s throttle_cruise: %s tcm_rpm: %s op_cruise_throttle: %s op_cruise_rpm: %s' % (gas, CS.throttle_cruise, CS.tcm_rpm, cruise_throttle, cruise_rpm))
 
     # *** alerts and pcm cancel ***
 

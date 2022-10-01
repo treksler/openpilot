@@ -83,7 +83,6 @@ class CarState(CarStateBase):
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]["Conventional_Cruise"] == 1
       self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.throttle_cruise = cp.vl["Throttle"]["Throttle_Cruise"]
-      self.wipers = cp.vl["BodyInfo"]["WIPERS"]
 
       self.es_brake_pressure = cp_cam.vl["ES_Brake"]["Brake_Pressure"]
       self.es_brake_active = cp_cam.vl["ES_Brake"]["Cruise_Brake_Active"]
@@ -175,7 +174,6 @@ class CarState(CarStateBase):
       ("DOOR_OPEN_RR", "BodyInfo"),
       ("DOOR_OPEN_RL", "BodyInfo"),
       ("Gear", "Transmission"),
-      ("WIPERS", "BodyInfo"),
     ]
 
     checks = [
