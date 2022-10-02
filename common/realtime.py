@@ -31,8 +31,9 @@ class Priority:
 
 
 def set_realtime_priority(level: int) -> None:
-  if not PC:
-    os.sched_setscheduler(0, os.SCHED_FIFO, os.sched_param(level))  # type: ignore[attr-defined] # pylint: disable=no-member
+  if sys.platform.startswith("linux"):
+    if not PC:
+      os.sched_setscheduler(0, os.SCHED_FIFO, os.sched_param(level))  # pylint: disable=no-member
 
 
 def set_core_affinity(cores: List[int]) -> None:
