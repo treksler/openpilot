@@ -101,8 +101,8 @@ class CarController:
         cruise_rpm, self.rpm_steady = accel_hysteresis(cruise_rpm, self.rpm_steady)
 
         # slow down the signals change
-        cruise_throttle = clip(cruise_throttle, self.cruise_throttle_last - CarControllerParams.THROTTLE_DELTA_DOWN, self.cruise_throttle_last + CarControllerParams.THROTTLE_DELTA_UP)
-        cruise_rpm = clip(cruise_rpm, self.cruise_rpm_last - CarControllerParams.RPM_DELTA_DOWN, self.cruise_rpm_last + CarControllerParams.RPM_DELTA_UP)
+        cruise_throttle = clip(cruise_throttle, self.cruise_throttle_last - CarControllerParams.THROTTLE_DELTA, self.cruise_throttle_last + CarControllerParams.THROTTLE_DELTA)
+        cruise_rpm = clip(cruise_rpm, self.cruise_rpm_last - CarControllerParams.RPM_DELTA, self.cruise_rpm_last + CarControllerParams.RPM_DELTA)
 
         self.cruise_throttle_last = cruise_throttle
         self.cruise_rpm_last = cruise_rpm

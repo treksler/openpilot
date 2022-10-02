@@ -33,17 +33,13 @@ class CarControllerParams:
   RPM_MAX = 3200                # max cruise_rpm
   RPM_BASE = 600                # cruise_rpm idle, from stock drive
   RPM_SCALE = 3000              # cruise_rpm, from testing
+  RPM_DELTA = 50
 
   THROTTLE_MIN = 0              # min cruise_throttle
   THROTTLE_MAX = 3400           # max cruise_throttle
   THROTTLE_BASE = 1810          # cruise_throttle, from stock drive
   THROTTLE_SCALE = 3000         # from testing
-
-  RPM_DELTA_UP = 50
-  RPM_DELTA_DOWN = 50
-
-  THROTTLE_DELTA_UP = 50
-  THROTTLE_DELTA_DOWN = 50
+  THROTTLE_DELTA = 50
 
   BRAKE_MIN = 0
   BRAKE_MAX = 400
