@@ -3,7 +3,7 @@ from cereal import car
 from panda import Panda
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, gen_empty_fingerprint, get_safety_config
 from selfdrive.car.interfaces import CarInterfaceBase
-from selfdrive.car.subaru.values import CAR, GLOBAL_GEN2, PREGLOBAL_CARS
+from selfdrive.car.subaru.values import CAR, GLOBAL_GEN2, PREGLOBAL_CARS, GLOBAL_CARS_SNG
 
 
 class CarInterface(CarInterfaceBase):
@@ -20,6 +20,7 @@ class CarInterface(CarInterfaceBase):
     if candidate in PREGLOBAL_CARS:
       ret.enableBsm = 0x25c in fingerprint[0]
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruLegacy)]
+      ret.autoResumeSng = True
     else:
       ret.enableBsm = 0x228 in fingerprint[0]
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaru)]
@@ -29,6 +30,8 @@ class CarInterface(CarInterfaceBase):
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_CROSSTREK_HYBRID
       elif candidate == CAR.FORESTER_2020H:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_FORESTER_HYBRID
+      if candidate in GLOBAL_CARS_SNG:
+        ret.autoResumeSng = True
 
     ret.steerLimitTimer = 0.4
     ret.steerActuatorDelay = 0.1
