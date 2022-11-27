@@ -5,7 +5,6 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsTextItem>
-#include <QPushButton>
 #include <QVBoxLayout>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -93,6 +92,7 @@ signals:
 private:
   void eventsMerged();
   void updateState();
+  void updateDisplayRange();
   void zoomIn(double min, double max);
   void zoomReset();
   void updateToolBar();
@@ -112,4 +112,5 @@ private:
   std::pair<double, double> event_range;
   std::pair<double, double> display_range;
   std::pair<double, double> zoomed_range;
+  bool use_dark_theme = false;
 };
