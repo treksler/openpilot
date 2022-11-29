@@ -30,6 +30,8 @@ class CarInterface(CarInterfaceBase):
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_CROSSTREK_HYBRID
       elif candidate == CAR.FORESTER_2020H:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_FORESTER_HYBRID
+      elif candidate == CAR.FORESTER_2022:
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_FORESTER_2022
       if candidate in GLOBAL_CARS_SNG:
         ret.autoResumeSng = True
 
