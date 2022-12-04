@@ -358,18 +358,22 @@ FW_VERSIONS = {
   CAR.FORESTER_2022: {
     (Ecu.abs, 0x7b0, None): [
       b'\xa3 !x\x00',
+      b'\xa3 !v\x00',
     ],
     (Ecu.eps, 0x746, None): [
       b'-\xc0%0',
+      b'-\xc0\x040',
     ],
     (Ecu.fwdCamera, 0x787, None): [
       b'\x04!\x01\x1eD\x07!\x00\x04,'
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xd5"a0\x07',
+      b'\xd5"`0\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\x1d\x86B0\x00',
+      b'\x1d\xf6B0\x00',
     ],
   },
   CAR.FORESTER_PREGLOBAL: {
