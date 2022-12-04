@@ -66,7 +66,10 @@ class CarState(CarStateBase):
     steer_threshold = 75 if self.CP.carFingerprint in PREGLOBAL_CARS else 80
     ret.steeringPressed = abs(ret.steeringTorque) > steer_threshold
 
-    if self.car_fingerprint in (CAR.CROSSTREK_2020H, CAR.FORESTER_2020H):
+    if self.car_fingerprint in (CAR.FORESTER_2020H, CAR.FORESTER_2022):
+      ret.cruiseState.enabled = cp_cam.vl["ES_Status"]['Cruise_Activated'] != 0
+      ret.cruiseState.available = cp_cam.vl["ES_DashStatus"]['Cruise_On'] != 0
+    elif self.car_fingerprint == CAR.CROSSTREK_2020H:
       ret.cruiseState.enabled = cp_cam.vl["ES_DashStatus"]['Cruise_Activated'] != 0
       ret.cruiseState.available = cp_cam.vl["ES_DashStatus"]['Cruise_On'] != 0
     else:

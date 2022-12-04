@@ -4,7 +4,7 @@
 
 A supported vehicle is one that just works when you install a comma three. All supported cars provide a better experience than any stock system.
 
-# 246 Supported Cars
+# 247 Supported Cars
 
 |Make|Model|Supported Package|ACC|No ACC accel below|No ALC below|Steering Torque|Resume from stop|Harness|Video|
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -157,6 +157,7 @@ A supported vehicle is one that just works when you install a comma three. All s
 |Subaru|Crosstrek Hybrid 2020|EyeSight Driver Assistance|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-empty.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Crosstrek Hybrid 2020">Subaru A</a>||
 |Subaru|Forester 2017-18|EyeSight Driver Assistance|Stock|0 mph|0 mph|[![star](assets/icon-star-empty.svg)](##)|[![star](assets/icon-star-full.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Forester 2017-18">Subaru A</a>||
 |Subaru|Forester 2019-21|All|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Forester 2019-21">Subaru A</a>||
+|Subaru|Forester 2022|EyeSight Driver Assistance|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-empty.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Forester 2022">Subaru C</a>||
 |Subaru|Forester Hybrid 2020|EyeSight Driver Assistance|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Forester Hybrid 2020">Subaru A</a>||
 |Subaru|Impreza 2017-19|EyeSight Driver Assistance|Stock|0 mph|0 mph|[![star](assets/icon-star-empty.svg)](##)|[![star](assets/icon-star-full.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Impreza 2017-19">Subaru A</a>||
 |Subaru|Impreza 2020-22|EyeSight Driver Assistance|Stock|0 mph|0 mph|[![star](assets/icon-star-full.svg)](##)|[![star](assets/icon-star-full.svg)](##)|<a href="https://comma.ai/shop/comma-three.html?make=Subaru&model=Impreza 2020-22">Subaru A</a>||
