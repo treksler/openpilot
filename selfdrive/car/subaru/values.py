@@ -77,7 +77,7 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.CROSSTREK_2020H: SubaruCarInfo("Subaru Crosstrek Hybrid 2020"),
   CAR.FORESTER: SubaruCarInfo("Subaru Forester 2019-21", "All"),
   CAR.FORESTER_2020H: SubaruCarInfo("Subaru Forester Hybrid 2020"),
-  CAR.FORESTER_2022: SubaruCarInfo("Subaru Forester Wilderness 2022"),
+  CAR.FORESTER_2022: SubaruCarInfo("Subaru Forester Wilderness 2022", harness=Harness.subaru_c),
   CAR.FORESTER_PREGLOBAL: SubaruCarInfo("Subaru Forester 2017-18"),
   CAR.LEGACY_PREGLOBAL: SubaruCarInfo("Subaru Legacy 2015-17"),
   CAR.LEGACY_PREGLOBAL_2018: SubaruCarInfo("Subaru Legacy 2018-19"),
