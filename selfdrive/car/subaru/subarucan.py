@@ -14,7 +14,7 @@ def create_steering_control(packer, apply_steer):
 def create_steering_control_2(packer, apply_steer):
   values = {
     "LKAS_Output": apply_steer,
-    "SET_1": 1 if apply_steer != 0 else 0,
+    "LKAS_Request": 1 if apply_steer != 0 else 0,
     "SET_3": 3
   }
   return packer.make_can_msg("ES_LKAS_2", 0, values)
