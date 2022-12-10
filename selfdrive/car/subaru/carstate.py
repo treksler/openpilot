@@ -67,7 +67,7 @@ class CarState(CarStateBase):
     ret.steeringPressed = abs(ret.steeringTorque) > steer_threshold
 
     if self.car_fingerprint in (CAR.CROSSTREK_2020H, CAR.FORESTER_2020H, CAR.FORESTER_2022):
-      ret.cruiseState.enabled = cp_cam.vl["ES_DashStatus"]['Cruise_Activated'] != 0
+      ret.cruiseState.enabled = cp_cam.vl["ES_Status"]['Cruise_Activated'] != 0
       ret.cruiseState.available = cp_cam.vl["ES_DashStatus"]['Cruise_On'] != 0
     else:
       cp_cruise = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp
@@ -348,10 +348,13 @@ class CarState(CarStateBase):
         ("LKAS_Right_Line_Visible", "ES_LKAS_State"),
         ("LKAS_Alert", "ES_LKAS_State"),
         ("Signal3", "ES_LKAS_State"),
+
+        ("Cruise_Activated", "ES_Status"),
       ]
       checks = [
         ("ES_DashStatus", 10),
         ("ES_LKAS_State", 10),
+        ("ES_Status", 20),
       ]
 
       if CP.carFingerprint not in GLOBAL_GEN2 and CP.carFingerprint != CAR.CROSSTREK_2020H:
