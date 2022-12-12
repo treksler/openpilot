@@ -30,6 +30,8 @@ class CarInterface(CarInterfaceBase):
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_CROSSTREK_HYBRID
       elif candidate == CAR.FORESTER_2020H:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_FORESTER_HYBRID
+      elif candidate == CAR.FORESTER_2022:
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_FORESTER_2022
       if candidate in GLOBAL_CARS_SNG:
         ret.autoResumeSng = True
 
@@ -80,15 +82,16 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 14., 23.], [0., 14., 23.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.045, 0.042, 0.20], [0.04, 0.035, 0.045]]
 
-    elif candidate in (CAR.FORESTER, CAR.FORESTER_2020H):
+    elif candidate in (CAR.FORESTER, CAR.FORESTER_2020H, CAR.FORESTER_2022):
       ret.mass = 1568. + STD_CARGO_KG
       ret.wheelbase = 2.67
       ret.centerToFront = ret.wheelbase * 0.5
       ret.steerRatio = 17           # learned, 14 stock
-      ret.lateralTuning.init('pid')
-      ret.lateralTuning.pid.kf = 0.000038
-      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 14., 23.], [0., 14., 23.]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.01, 0.065, 0.2], [0.001, 0.015, 0.025]]
+      #ret.lateralTuning.init('pid')
+      #ret.lateralTuning.pid.kf = 0.000038
+      #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0., 14., 23.], [0., 14., 23.]]
+      #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.01, 0.065, 0.2], [0.001, 0.015, 0.025]]
+      CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
     elif candidate in (CAR.OUTBACK, CAR.LEGACY):
       ret.mass = 1568. + STD_CARGO_KG
