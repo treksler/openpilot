@@ -1,3 +1,9 @@
+2022-12-12
+==========
+* 2022 Forester support / @martinl, @VirtualDonkey, @FutureGhost
+* FPv2 updates
+  * 2022 Forester / @FilmFan
+
 2022-12-06
 ==========
 * FPv2 updates
