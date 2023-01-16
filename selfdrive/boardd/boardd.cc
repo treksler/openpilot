@@ -18,6 +18,9 @@
 #include <cstdlib>
 #include <future>
 #include <thread>
+#ifdef __APPLE__
+#include <array>
+#endif
 
 #include "cereal/gen/cpp/car.capnp.h"
 #include "cereal/messaging/messaging.h"
