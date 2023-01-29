@@ -1,3 +1,8 @@
+2023-01-29
+==========
+* FPv2 updates
+  * Subaru Outback 2017 / @rikinmshah
+
 2022-12-27
 ==========
 * Restore pid tuning values for preglobal models / @martinl
