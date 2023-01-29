@@ -513,6 +513,7 @@ FW_VERSIONS = {
       b'\000\000c\x90\037@\020\016',
       b'\x00\x00c\xec\x37@\x04',
       b'\x00\x00c\xd1\x1f@\x10\x16',
+      b'\x00\x00c\xec\x00\x00\x00\x00',
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xb4+@p\a',
@@ -540,6 +541,7 @@ FW_VERSIONS = {
       b'\xbe\xfb\xe0p\000',
       b'\xbf\xfb\xe0b\x00',
       b'\xbe\xe2@`\x00',
+      b'\xbd\xf2@\x80\x00',
     ],
   },
   CAR.OUTBACK_PREGLOBAL_2018: {
