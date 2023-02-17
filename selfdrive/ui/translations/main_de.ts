@@ -1035,6 +1035,22 @@ location set</source>
         <source>Enable experimental longitudinal control to allow Experimental mode.</source>
         <translation>Aktiviere den experimentellen Openpilot Tempomaten für experimentelle Funktionen.</translation>
     </message>
+    <message>
+        <source>Subaru Manual PB Stop and Go</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Experimental feature to enable stop and go for Subaru Global models with manual handbrake. Models with electric parking brake should keep this disabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Firmware query delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add 10 second delay before running FPv2 ECU firmware queries. May be needed for Subaru pre-global models</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Updater</name>
