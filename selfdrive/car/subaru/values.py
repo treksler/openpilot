@@ -70,7 +70,7 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   ],
   CAR.IMPREZA_2020: [
     SubaruCarInfo("Subaru Impreza 2020-22"),
-    SubaruCarInfo("Subaru Crosstrek 2020-21"),
+    SubaruCarInfo("Subaru Crosstrek 2020-23"),
     SubaruCarInfo("Subaru XV 2020-21"),
   ],
   CAR.CROSSTREK_2020H: SubaruCarInfo("Subaru Crosstrek Hybrid 2020"),
@@ -273,6 +273,7 @@ FW_VERSIONS = {
       b'\xca!fp\x07',
       b'\xf3"f@\x07',
       b'\xe6!`@\x07',
+      b'\xe6!fp\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xe6\xf5\004\000\000',
@@ -302,6 +303,7 @@ FW_VERSIONS = {
     (Ecu.engine, 0x7e0, None): [
       b'\xd7!`@\x07',
       b'\xd7!`p\a',
+      b'\xe9\xf5B0\x00',
     ],
   },
   CAR.FORESTER: {
