@@ -1,3 +1,8 @@
+2023-03-05
+==========
+* FPv2 updates
+  * Subaru Forester 2019 / @PlanZ
+
 2023-03-04
 ==========
 * openpilot 0.9.1
