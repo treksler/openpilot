@@ -354,7 +354,6 @@ FW_VERSIONS = {
   CAR.FORESTER_2020H: {
     (Ecu.abs, 0x7b0, None): [
       b'\xa3 \x19T\x00',
-      b'\xa3 !x\x00',
     ],
     (Ecu.eps, 0x746, None): [
       b'\x8d\xc2\x00\x00',
