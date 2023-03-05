@@ -316,6 +316,7 @@ FW_VERSIONS = {
       b'\xa3  \x14\x01',
       b'\xf1\x00\xbb\r\x05',
       b'\xa3  $\x00',
+      b'\xa3 \x18&\x00',
     ],
     (Ecu.eps, 0x746, None): [
       b'\x8d\xc0\x04\x00',
@@ -337,6 +338,7 @@ FW_VERSIONS = {
       b'\xf1\x00\xa2\x10\n',
       b'\xcf"`p\x07',
       b'\xcf\xa2`@\x07',
+      b'\xb6\xa2`A\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\032\xf6B0\000',
@@ -346,6 +348,7 @@ FW_VERSIONS = {
       b'\x1a\xf6b0\x00',
       b'\x1a\xf6f`\x00',
       b'\x1a\xe6F1\x00',
+      b'\x1a\xe6B1\x00',
     ],
   },
   CAR.FORESTER_2020H: {
