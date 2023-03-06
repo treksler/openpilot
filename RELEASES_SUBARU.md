@@ -2,6 +2,7 @@
 ==========
 * FPv2 updates
   * Subaru Forester 2019 / @PlanZ
+* Forester 2022 support / @martinl
 
 2023-03-04
 ==========
