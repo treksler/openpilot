@@ -35,6 +35,7 @@ class CarControllerParams:
 class CAR:
   # Global platform
   ASCENT = "SUBARU ASCENT LIMITED 2019"
+  ASCENT_2023 = "SUBARU ASCENT 2023"
   IMPREZA = "SUBARU IMPREZA LIMITED 2019"
   IMPREZA_2020 = "SUBARU IMPREZA SPORT 2020"
   CROSSTREK_2020H = "SUBARU CROSSTREK LIMITED 2020 HYBRID"
@@ -62,6 +63,7 @@ class SubaruCarInfo(CarInfo):
 
 CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.ASCENT: SubaruCarInfo("Subaru Ascent 2019-21", "All"),
+  CAR.ASCENT_2023: SubaruCarInfo("Subaru Ascent 2023", "All", harness=Harness.subaru_d),
   CAR.OUTBACK: SubaruCarInfo("Subaru Outback 2020-22", "All", harness=Harness.subaru_b),
   CAR.LEGACY: SubaruCarInfo("Subaru Legacy 2020-22", "All", harness=Harness.subaru_b),
   CAR.IMPREZA: [
@@ -133,6 +135,14 @@ FW_VERSIONS = {
       b'\001\xfe\xf9\000\000',
       b'\x01\xfe\xf7\x00\x00',
       b'\x01\xfe\xfa\x00\x00',
+    ],
+  },
+  CAR.ASCENT_2023: {
+    (Ecu.abs, 0x7b0, None): [
+      b'\xa5 #\x03\x00',
+    ],
+    (Ecu.eps, 0x746, None): [
+      b'%\xc0\xd0\x11',
     ],
   },
   CAR.LEGACY: {
@@ -684,6 +694,7 @@ FW_VERSIONS = {
 
 DBC = {
   CAR.ASCENT: dbc_dict('subaru_global_2017_generated', None),
+  CAR.ASCENT_2023: dbc_dict('subaru_global_2017_generated', None),
   CAR.IMPREZA: dbc_dict('subaru_global_2017_generated', None),
   CAR.IMPREZA_2020: dbc_dict('subaru_global_2017_generated', None),
   CAR.CROSSTREK_2020H: dbc_dict('subaru_global_2020_hybrid_generated', None),
@@ -701,6 +712,6 @@ DBC = {
   CAR.WRX_PREGLOBAL: dbc_dict('subaru_forester_2017_generated', None),
 }
 
-GLOBAL_GEN2 = (CAR.OUTBACK, CAR.LEGACY)
+GLOBAL_GEN2 = (CAR.OUTBACK, CAR.LEGACY, CAR.ASCENT_2023)
 PREGLOBAL_CARS = (CAR.FORESTER_PREGLOBAL, CAR.LEGACY_PREGLOBAL, CAR.LEGACY_PREGLOBAL_2018, CAR.LEVORG_PREGLOBAL, CAR.OUTBACK_PREGLOBAL, CAR.OUTBACK_PREGLOBAL_2018, CAR.WRX_PREGLOBAL)
 GLOBAL_CARS_SNG = (CAR.ASCENT, CAR.IMPREZA, CAR.IMPREZA_2020, CAR.FORESTER, CAR.FORESTER_2020H, CAR.FORESTER_2022)
