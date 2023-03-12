@@ -151,10 +151,10 @@ FW_VERSIONS = {
     (Ecu.fwdCamera, 0x787, None): [
       b'\x05!\x08\x1dK\x05!\x08\x01/',
     ],
-    (Ecu.engine, 0x7e2, None): [
+    (Ecu.engine, 0x7a2, None): [
       b'\xe5,\xa0P\x07',
     ],
-    (Ecu.transmission, 0x7e3, None): [
+    (Ecu.transmission, 0x7a3, None): [
       b'\x04\xfe\xf3\x00\x00',
     ],
   },
