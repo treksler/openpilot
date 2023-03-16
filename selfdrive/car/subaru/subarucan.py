@@ -1,6 +1,24 @@
 import copy
 from cereal import car
 
+import os
+import json
+from common.basedir import BASEDIR
+EVENTS_FILE = os.path.join(BASEDIR, "selfdrive", "debug_events.json")
+
+def enrich_values(values, lookup_key):
+  try:
+    with open(EVENTS_FILE, "r") as f:
+      debug_events_files = json.load(f)
+  except (FileNotFoundError, json.decoder.JSONDecodeError):
+    debug_events_files = {}
+
+  if lookup_key in debug_events_files.keys():
+    for key in debug_events_files[lookup_key]:
+      values[key] = debug_events_files[lookup_key][key]
+
+  return values
+
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
 def create_steering_control(packer, apply_steer):
@@ -73,6 +91,8 @@ def create_es_lkas(packer, es_lkas_msg, enabled, visual_alert, left_line, right_
   values["LKAS_Left_Line_Visible"] = int(left_line)
   values["LKAS_Right_Line_Visible"] = int(right_line)
 
+  values = enrich_values(values, "ES_LKAS_State")
+
   return packer.make_can_msg("ES_LKAS_State", 0, values)
 
 def create_es_dashstatus(packer, dashstatus_msg):
@@ -81,6 +101,8 @@ def create_es_dashstatus(packer, dashstatus_msg):
   # Filter stock LKAS disabled and Keep hands on steering wheel OFF alerts
   if values["LKAS_State_Msg"] in [2, 3]:
     values["LKAS_State_Msg"] = 0
+
+  values = enrich_values(values, "ES_DashStatus")
 
   return packer.make_can_msg("ES_DashStatus", 0, values)
 
