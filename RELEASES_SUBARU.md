@@ -1,3 +1,8 @@
+2023-04-09
+==========
+* FPv2 updates
+  * Subaru Forester 2020 / @Decosta
+
 2023-03-05
 ==========
 * FPv2 updates
