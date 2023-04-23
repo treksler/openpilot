@@ -1,3 +1,8 @@
+2023-04-23
+==========
+* FPv2 updates
+  * Subaru Impreza 2019 / @Chase Bolt
+
 2023-04-09
 ==========
 * FPv2 updates
