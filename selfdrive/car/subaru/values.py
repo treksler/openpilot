@@ -406,6 +406,7 @@ FW_VERSIONS = {
       b'\x00\x00\x64\x35\x1f\x40\x20\x09',
       b'\x00\x00c\xe9\x1f@ \x03',
       b'\x00\x00d\xd3\x1f@ \t',
+      b'\x00\x00c\xe9\x00\x00\x00\x00',
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xba"@p\a',
@@ -413,6 +414,7 @@ FW_VERSIONS = {
       b'\xf1\x82\xa7)\xa0q\a',
       b'\xba"@@\a',
       b'\xba)\xa0@\x07',
+      b'\xa7"@q\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xdc\xf2\x60\x60\x00',
@@ -422,6 +424,7 @@ FW_VERSIONS = {
       b'\xdc\xf2`\x80\x00',
       b'\x1a\xf6F`\x00',
       b'\xdc\xfd\xe0`\x00',
+      b'\xda\xf2`\x80\x00',
     ],
   },
   CAR.LEGACY_PREGLOBAL: {
