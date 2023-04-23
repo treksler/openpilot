@@ -2,6 +2,7 @@
 ==========
 * FPv2 updates
   * Subaru Impreza 2019 / @Chase Bolt
+  * Subaru Forester 2017 / @boettler
 
 2023-04-09
 ==========
