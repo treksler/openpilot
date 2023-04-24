@@ -151,11 +151,11 @@ class CarController:
 
       if self.CP.openpilotLongitudinalControl:
         if self.es_status_cnt != CS.es_status_msg["COUNTER"]:
-          can_sends.append(subarucan.create_es_status(self.packer, CS.es_status_msg, CC.longActive, cruise_rpm, LONG_ES_BUS))
+          can_sends.append(subarucan.create_es_status(self.packer, CS.es_status_msg, CC.longActive, cruise_rpm, LONG_MAIN_BUS))
           self.es_status_cnt = CS.es_status_msg["COUNTER"]
 
         if self.es_brake_cnt != CS.es_brake_msg["COUNTER"]:
-          can_sends.append(subarucan.create_es_brake(self.packer, CS.es_brake_msg, CC.enabled, brake_cmd, brake_value, LONG_ES_BUS))
+          can_sends.append(subarucan.create_es_brake(self.packer, CS.es_brake_msg, CC.enabled, brake_cmd, brake_value, LONG_MAIN_BUS))
           self.es_brake_cnt = CS.es_brake_msg["COUNTER"]
 
         if self.cruise_control_cnt != CS.cruise_control_msg["COUNTER"]:
@@ -163,11 +163,11 @@ class CarController:
           self.cruise_control_cnt = CS.cruise_control_msg["COUNTER"]
 
         if self.brake_status_cnt != CS.brake_status_msg["COUNTER"]:
-          can_sends.append(subarucan.create_brake_status(self.packer, CS.brake_status_msg, CS.aeb, LONG_MAIN_BUS))
+          can_sends.append(subarucan.create_brake_status(self.packer, CS.brake_status_msg, CS.aeb, LONG_ES_BUS))
           self.brake_status_cnt = CS.brake_status_msg["COUNTER"]
 
         if self.es_distance_cnt != CS.es_distance_msg["COUNTER"]:
-          can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle, LONG_ES_BUS))
+          can_sends.append(subarucan.create_es_distance(self.packer, CS.es_distance_msg, pcm_cancel_cmd, CC.longActive, brake_cmd, brake_value, cruise_throttle, LONG_MAIN_BUS))
           self.es_distance_cnt = CS.es_distance_msg["COUNTER"]
 
       else:
