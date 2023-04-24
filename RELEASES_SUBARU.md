@@ -1,3 +1,8 @@
+2023-04-24
+==========
+* FPv2 updates
+  * Subaru Crosstrek 2023 / @Wafflles
+
 2023-04-23
 ==========
 * FPv2 updates
