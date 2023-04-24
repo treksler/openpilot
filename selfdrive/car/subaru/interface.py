@@ -15,6 +15,10 @@ class CarInterface(CarInterfaceBase):
     ret.dashcamOnly = candidate in PREGLOBAL_CARS
     ret.autoResumeSng = False
 
+    # force enable gen2 second panda
+    if candidate in GLOBAL_GEN2:
+      ret.flags |= SubaruFlags.GEN2_SECOND_PANDA.value
+
     # Detect infotainment message sent from the camera
     if candidate not in PREGLOBAL_CARS and 0x323 in fingerprint[2]:
       ret.flags |= SubaruFlags.SEND_INFOTAINMENT.value
@@ -24,9 +28,27 @@ class CarInterface(CarInterfaceBase):
       ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaruLegacy)]
     else:
       ret.enableBsm = 0x228 in fingerprint[0]
-      ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.subaru)]
-      if candidate in GLOBAL_GEN2:
+
+      if ret.flags & SubaruFlags.GEN2_SECOND_PANDA:
+        # Second panda for gen2 long
+        ret.safetyConfigs = [
+          get_safety_config(car.CarParams.SafetyModel.subaru),
+          get_safety_config(car.CarParams.SafetyModel.subaru)
+        ]
+
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_GEN2
+        ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_GEN2_USING_SECOND_PANDA
+
+        ret.safetyConfigs[1].safetyParam |= Panda.FLAG_SUBARU_GEN2
+        ret.safetyConfigs[1].safetyParam |= Panda.FLAG_SUBARU_GEN2_IS_SECOND_PANDA
+
+      else:
+        ret.safetyConfigs = [
+          get_safety_config(car.CarParams.SafetyModel.subaru)
+        ]
+
+        if candidate in GLOBAL_GEN2:
+          ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_GEN2
 
     ret.steerLimitTimer = 0.4
     ret.steerActuatorDelay = 0.1
@@ -106,7 +128,10 @@ class CarInterface(CarInterfaceBase):
       raise ValueError(f"unknown car: {candidate}")
 
     # longitudinal
-    ret.experimentalLongitudinalAvailable = candidate not in (GLOBAL_GEN2 + PREGLOBAL_CARS)
+    ret.experimentalLongitudinalAvailable = \
+      (ret.flags & SubaruFlags.GEN2_SECOND_PANDA) != 0 or \
+      (candidate not in PREGLOBAL_CARS and candidate not in GLOBAL_GEN2)
+
     if experimental_long and ret.experimentalLongitudinalAvailable:
       ret.longitudinalTuning.kpBP = [0., 5., 35.]
       ret.longitudinalTuning.kpV = [0.8, 1.0, 1.5]
@@ -117,13 +142,15 @@ class CarInterface(CarInterfaceBase):
       ret.openpilotLongitudinalControl = experimental_long
       if ret.openpilotLongitudinalControl:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_LONG
+        if ret.flags & SubaruFlags.GEN2_SECOND_PANDA:
+          ret.safetyConfigs[1].safetyParam |= Panda.FLAG_SUBARU_LONG
 
     return ret
 
   # returns a car.CarState
   def _update(self, c):
 
-    ret = self.CS.update(self.cp, self.cp_cam, self.cp_body)
+    ret = self.CS.update(self.cp, self.cp_cam, self.cp_body, self.cp_adas)
 
     ret.events = self.create_common_events(ret).to_msg()
 

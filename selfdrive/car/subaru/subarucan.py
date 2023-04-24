@@ -14,7 +14,7 @@ def create_steering_control(packer, apply_steer):
 def create_steering_status(packer):
   return packer.make_can_msg("ES_LKAS_State", 0, {})
 
-def create_es_distance(packer, es_distance_msg, bus, pcm_cancel_cmd, long_active, brake_cmd, brake_value, cruise_throttle):
+def create_es_distance(packer, es_distance_msg, pcm_cancel_cmd, long_active, brake_cmd, brake_value, cruise_throttle, bus):
 
   values = copy.copy(es_distance_msg)
   if long_active:
@@ -88,7 +88,7 @@ def create_es_dashstatus(packer, es_dashstatus_msg, enabled, long_active, lead_v
 
   return packer.make_can_msg("ES_DashStatus", 0, values)
 
-def create_es_brake(packer, es_brake_msg, enabled, brake_cmd, brake_value):
+def create_es_brake(packer, es_brake_msg, enabled, brake_cmd, brake_value, bus):
 
   values = copy.copy(es_brake_msg)
   if enabled:
@@ -98,34 +98,33 @@ def create_es_brake(packer, es_brake_msg, enabled, brake_cmd, brake_value):
     values["Cruise_Brake_Active"] = 1
     values["Cruise_Brake_Lights"] = 1 if brake_value >= 70 else 0
 
-  return packer.make_can_msg("ES_Brake", 0, values)
+  return packer.make_can_msg("ES_Brake", bus, values)
 
-def create_es_status(packer, es_status_msg, long_active, cruise_rpm):
+def create_es_status(packer, es_status_msg, long_active, cruise_rpm, bus):
 
   values = copy.copy(es_status_msg)
   if long_active:
     values["Cruise_Activated"] = 1
     values["Cruise_RPM"] = cruise_rpm
 
-  return packer.make_can_msg("ES_Status", 0, values)
+  return packer.make_can_msg("ES_Status", bus, values)
 
 # disable cruise_activated feedback to eyesight to keep ready state
-def create_cruise_control(packer, cruise_control_msg):
+def create_cruise_control(packer, cruise_control_msg, bus):
 
   values = copy.copy(cruise_control_msg)
   values["Cruise_Activated"] = 0
 
-  return packer.make_can_msg("CruiseControl", 2, values)
+  return packer.make_can_msg("CruiseControl", bus, values)
 
 # disable es_brake feedback to eyesight, exempt AEB
-def create_brake_status(packer, brake_status_msg, aeb):
+def create_brake_status(packer, brake_status_msg, aeb, bus):
 
   values = copy.copy(brake_status_msg)
   if not aeb:
     values["ES_Brake"] = 0
 
-  return packer.make_can_msg("Brake_Status", 2, values)
-
+  return packer.make_can_msg("Brake_Status", bus, values)
 def create_infotainmentstatus(packer, infotainmentstatus_msg, visual_alert):
   # Filter stock LKAS disabled and Keep hands on steering wheel OFF alerts
   if infotainmentstatus_msg["LKAS_State_Infotainment"] in (3, 4):
