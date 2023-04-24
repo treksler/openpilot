@@ -348,18 +348,6 @@ class CarState(CarStateBase):
         signals += CarState.get_global_es_signals()[0]
         checks += CarState.get_global_es_signals()[1]
 
-      if CP.carFingerprint not in PREGLOBAL_CARS:
-        signals += [
-          ("Steer_Warning", "Steering_Torque"),
-          ("RPM", "Transmission"),
-          ("UNITS", "Dashlights"),
-        ]
-
-        checks += [
-          ("Dashlights", 10),
-          ("BodyInfo", 10),
-        ]
-
       if CP.flags & SubaruFlags.SEND_INFOTAINMENT:
         signals += [
           ("LKAS_State_Infotainment", "INFOTAINMENT_STATUS"),
