@@ -40,6 +40,7 @@ class CarInterface(CarInterfaceBase):
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_SUBARU_GEN2_USING_SECOND_PANDA
 
         ret.safetyConfigs[1].safetyParam |= Panda.FLAG_SUBARU_GEN2
+        ret.safetyConfigs[1].safetyParam |= Panda.FLAG_SUBARU_GEN2_USING_SECOND_PANDA
         ret.safetyConfigs[1].safetyParam |= Panda.FLAG_SUBARU_GEN2_IS_SECOND_PANDA
 
       else:
