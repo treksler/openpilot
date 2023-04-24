@@ -2,7 +2,7 @@ from common.numpy_fast import clip
 from opendbc.can.packer import CANPacker
 from selfdrive.car import apply_driver_steer_torque_limits
 from selfdrive.car.subaru import subarucan
-from selfdrive.car.subaru.values import DBC, GLOBAL_GEN2, PREGLOBAL_CARS, CarControllerParams, SubaruFlags
+from selfdrive.car.subaru.values import DBC, PREGLOBAL_CARS, CarControllerParams, SubaruFlags
 
 ACCEL_HYST_GAP = 10  # don't change accel command for small oscilalitons within this value
 
