@@ -159,7 +159,7 @@ class CarController:
           self.es_brake_cnt = CS.es_brake_msg["COUNTER"]
 
         if self.cruise_control_cnt != CS.cruise_control_msg["COUNTER"]:
-          can_sends.append(subarucan.create_cruise_control(self.packer, CS.cruise_control_msg, LONG_MAIN_BUS))
+          can_sends.append(subarucan.create_cruise_control(self.packer, CS.cruise_control_msg, LONG_ES_BUS))
           self.cruise_control_cnt = CS.cruise_control_msg["COUNTER"]
 
         if self.brake_status_cnt != CS.brake_status_msg["COUNTER"]:
