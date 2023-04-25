@@ -77,11 +77,11 @@ class CarController:
 
     if self.CP.flags & SubaruFlags.GEN2_SECOND_PANDA:
       # second panda long
-      LONG_ES_BUS = 4
-      LONG_MAIN_BUS = 6
+      LONG_MAIN_BUS = 4
+      LONG_ES_BUS = 6
     else:
-      LONG_ES_BUS = 0
-      LONG_MAIN_BUS = 2
+      LONG_MAIN_BUS = 0
+      LONG_ES_BUS = 2
 
     cruise_rpm = 0
     cruise_throttle = 0

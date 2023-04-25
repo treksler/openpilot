@@ -125,6 +125,7 @@ def create_brake_status(packer, brake_status_msg, aeb, bus):
     values["ES_Brake"] = 0
 
   return packer.make_can_msg("Brake_Status", bus, values)
+
 def create_infotainmentstatus(packer, infotainmentstatus_msg, visual_alert):
   # Filter stock LKAS disabled and Keep hands on steering wheel OFF alerts
   if infotainmentstatus_msg["LKAS_State_Infotainment"] in (3, 4):
