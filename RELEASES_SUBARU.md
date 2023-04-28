@@ -1,3 +1,8 @@
+2023-04-28
+==========
+* FPv2 updates
+  * Subaru Legacy 3.6R Limited 2016 / @John
+
 2023-04-24
 ==========
 * FPv2 updates
