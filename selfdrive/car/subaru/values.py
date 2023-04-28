@@ -257,13 +257,12 @@ FW_VERSIONS = {
     ],
     (Ecu.fwdCamera, 0x787, None): [
       b'\000\000eb\037@ \"',
-      b'\000\000e\x8f\037@ )',
+      b'\x00\x00e\x8f\x1f@ )'
       b'\x00\x00eb\x00\x00\x00\x00',
       b'\x00\x00eq\x1f@ "',
       b'\x00\x00eq\x00\x00\x00\x00',
       b'\x00\x00e\x8f\x00\x00\x00\x00',
       b'\x00\x00e\xa4\x00\x00\x00\x00',
-      b'\x00\x00e\x8f\x1f@ )'
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xca!ap\a',
@@ -433,6 +432,7 @@ FW_VERSIONS = {
       b'[\xba\xc4\x03',
       b'{\x97D\x00',
       b'[\x97D\000',
+      b'k\x9aD\x00',
     ],
     (Ecu.eps, 0x746, None): [
       b'[\xb0\x00\x01',
@@ -449,12 +449,14 @@ FW_VERSIONS = {
       b'\xa0+@p\x07',
       b'\xb4"@0\x07',
       b'\xa0"@q\a',
+      b'\xab+@p\x07',
     ],
     (Ecu.transmission, 0x7e1, None): [
       b'\xbe\xf2\x00p\x00',
       b'\xbf\xfb\xc0\x80\x00',
       b'\xbd\xf2\x00`\x00',
       b'\xbf\xf2\000\x80\000',
+      b'\xbe\xfb\xc0p\x00',
     ],
   },
   CAR.LEGACY_PREGLOBAL_2018: {
