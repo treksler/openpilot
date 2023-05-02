@@ -106,7 +106,6 @@ class CarState(CarStateBase):
     if self.car_fingerprint != CAR.CROSSTREK_2020H:
       cp_es_distance = cp_body if self.car_fingerprint in GLOBAL_GEN2 else cp_cam
       self.car_follow = cp_es_distance.vl["ES_Distance"]["Car_Follow"]
-      self.close_distance = cp_es_distance.vl["ES_Distance"]["Close_Distance"]
       self.es_distance_msg = copy.copy(cp_es_distance.vl["ES_Distance"])
 
     return ret
