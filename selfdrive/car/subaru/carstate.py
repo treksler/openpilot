@@ -4,7 +4,7 @@ from opendbc.can.can_define import CANDefine
 from common.conversions import Conversions as CV
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
-from selfdrive.car.subaru.values import DBC, CAR, GLOBAL_GEN2, PREGLOBAL_CARS
+from selfdrive.car.subaru.values import DBC, CAR, GLOBAL_GEN2, PREGLOBAL_CARS, SubaruFlags
 from common.params import Params
 
 
@@ -108,6 +108,10 @@ class CarState(CarStateBase):
       self.car_follow = cp_es_distance.vl["ES_Distance"]["Car_Follow"]
       self.close_distance = cp_es_distance.vl["ES_Distance"]["Close_Distance"]
       self.es_distance_msg = copy.copy(cp_es_distance.vl["ES_Distance"])
+      self.es_lkas_state_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
+
+    if self.CP.flags & SubaruFlags.SEND_INFOTAINMENT:
+      self.es_infotainmentstatus_msg = copy.copy(cp_cam.vl["INFOTAINMENT_STATUS"])
 
     return ret
 
@@ -320,7 +324,7 @@ class CarState(CarStateBase):
         ("LKAS_State_Msg", "ES_DashStatus"),
         ("Signal2", "ES_DashStatus"),
         ("Cruise_Soft_Disable", "ES_DashStatus"),
-        ("EyeSight_Status_Msg", "ES_DashStatus"),
+        ("Cruise_Status_Msg", "ES_DashStatus"),
         ("Signal3", "ES_DashStatus"),
         ("Cruise_Distance", "ES_DashStatus"),
         ("Signal4", "ES_DashStatus"),
@@ -363,6 +367,15 @@ class CarState(CarStateBase):
       if CP.carFingerprint not in GLOBAL_GEN2 and CP.carFingerprint != CAR.CROSSTREK_2020H:
         signals += CarState.get_global_es_signals()[0]
         checks += CarState.get_global_es_signals()[1]
+
+      if CP.flags & SubaruFlags.SEND_INFOTAINMENT:
+        signals += [
+          ("LKAS_State_Infotainment", "INFOTAINMENT_STATUS"),
+          ("LKAS_Blue_Lines", "INFOTAINMENT_STATUS"),
+          ("Signal1", "INFOTAINMENT_STATUS"),
+          ("Signal2", "INFOTAINMENT_STATUS"),
+        ]
+        checks.append(("INFOTAINMENT_STATUS", 10))
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 2)
 
