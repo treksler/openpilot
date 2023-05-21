@@ -64,7 +64,6 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.OUTBACK: SubaruCarInfo("Subaru Outback 2020-2022"),
   CAR.OUTBACK_2023: SubaruCarInfo("Subaru Outback 2023"),
   CAR.OUTBACK_PREGLOBAL: SubaruCarInfo("Subaru Outback 2015-17"),
-  CAR.OUTBACK_PREGLOBAL: SubaruCarInfo("Subaru Outback 2015-17"),
   CAR.OUTBACK_PREGLOBAL_2018: SubaruCarInfo("Subaru Outback 2018-19"),
   CAR.WRX_PREGLOBAL: SubaruCarInfo("Subaru WRX 2016-18"),
 }
@@ -466,24 +465,6 @@ FW_VERSIONS = {
       b'\xa8\xf6D0\x00',
     ],
   },
-  CAR.OUTBACK_PREGLOBAL: {
-    (Ecu.esp, 0x7b0, None): [
-      b'{\x9a\xac\x00',
-    ],
-    (Ecu.eps, 0x746, None): [
-      b'k\xb0\x00\x00',
-    ],
-    (Ecu.fwdCamera, 0x787, None): [
-      b'\x00\x00c\xec\x1f@ \x04',
-    ],
-    (Ecu.engine, 0x7a2, None): [
-      b'\xb4+@p\a',
-    ],
-    (Ecu.transmission, 0x7a3, None): [
-      b'\xbd\xfb\xe0\x80\x00',
-    ],
-  },
-
   CAR.OUTBACK_PREGLOBAL: {
     (Ecu.esp, 0x7b0, None): [
       b'{\x9a\xac\x00',
