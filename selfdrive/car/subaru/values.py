@@ -33,6 +33,7 @@ class CAR:
   LEGACY_PREGLOBAL_2018 = "SUBARU LEGACY 2018 - 2019"
   LEVORG_PREGLOBAL = "SUBARU LEVORG 2016"
   OUTBACK = "SUBARU OUTBACK 2020"
+  OUTBACK_2023 = "SUBARU OUTBACK 2023"
   OUTBACK_PREGLOBAL = "SUBARU OUTBACK 2015 - 2017"
   OUTBACK_PREGLOBAL_2018 = "SUBARU OUTBACK 2018 - 2019"
   WRX_PREGLOBAL = "SUBARU WRX 2018"
@@ -60,6 +61,9 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.LEGACY_PREGLOBAL: SubaruCarInfo("Subaru Legacy 2015-17"),
   CAR.LEGACY_PREGLOBAL_2018: SubaruCarInfo("Subaru Legacy 2018-19"),
   CAR.LEVORG_PREGLOBAL: SubaruCarInfo("Subaru Levorg 2016"),
+  CAR.OUTBACK: SubaruCarInfo("Subaru Outback 2020-2022"),
+  CAR.OUTBACK_2023: SubaruCarInfo("Subaru Outback 2023"),
+  CAR.OUTBACK_PREGLOBAL: SubaruCarInfo("Subaru Outback 2015-17"),
   CAR.OUTBACK_PREGLOBAL: SubaruCarInfo("Subaru Outback 2015-17"),
   CAR.OUTBACK_PREGLOBAL_2018: SubaruCarInfo("Subaru Outback 2018-19"),
   CAR.WRX_PREGLOBAL: SubaruCarInfo("Subaru WRX 2016-18"),
@@ -445,6 +449,41 @@ FW_VERSIONS = {
       b'\xa7\xfe\xf4@\x00',
     ],
   },
+  CAR.OUTBACK_2023: {
+    (Ecu.esp, 0x7b0, None): [
+      b'\xf1\x00\xbb\r\x07',
+    ],
+    (Ecu.eps, 0x746, None): [
+      b'+\xc0\x10\x11\x00',
+    ],
+    (Ecu.fwdCamera, 0x787, None): [
+      b'\xf1\x00 \x02\x0e',
+    ],
+    (Ecu.engine, 0x7a2, None): [
+      b'\xed"`@\x07',
+    ],
+    (Ecu.transmission, 0x7a3, None): [
+      b'\xa8\xf6D0\x00',
+    ],
+  },
+  CAR.OUTBACK_PREGLOBAL: {
+    (Ecu.esp, 0x7b0, None): [
+      b'{\x9a\xac\x00',
+    ],
+    (Ecu.eps, 0x746, None): [
+      b'k\xb0\x00\x00',
+    ],
+    (Ecu.fwdCamera, 0x787, None): [
+      b'\x00\x00c\xec\x1f@ \x04',
+    ],
+    (Ecu.engine, 0x7a2, None): [
+      b'\xb4+@p\a',
+    ],
+    (Ecu.transmission, 0x7a3, None): [
+      b'\xbd\xfb\xe0\x80\x00',
+    ],
+  },
+
   CAR.OUTBACK_PREGLOBAL: {
     (Ecu.esp, 0x7b0, None): [
       b'{\x9a\xac\x00',
@@ -590,6 +629,7 @@ STEER_THRESHOLD = {
   CAR.LEGACY_PREGLOBAL_2018: 75,
   CAR.LEVORG_PREGLOBAL: 75,
   CAR.OUTBACK: 80,
+  CAR.OUTBACK_2023: 80,
   CAR.OUTBACK_PREGLOBAL: 75,
   CAR.OUTBACK_PREGLOBAL_2018: 75,
   CAR.WRX_PREGLOBAL: 75,
@@ -608,6 +648,7 @@ DBC = {
   CAR.LEGACY_PREGLOBAL_2018: dbc_dict('subaru_outback_2019_generated', None),
   CAR.LEVORG_PREGLOBAL: dbc_dict('subaru_forester_2017_generated', None),
   CAR.OUTBACK: dbc_dict('subaru_global_2017_generated', None),
+  CAR.OUTBACK_2023: dbc_dict('subaru_global_2017_generated', None),
   CAR.OUTBACK_PREGLOBAL: dbc_dict('subaru_outback_2015_generated', None),
   CAR.OUTBACK_PREGLOBAL_2018: dbc_dict('subaru_outback_2019_generated', None),
   CAR.WRX_PREGLOBAL: dbc_dict('subaru_forester_2017_generated', None),

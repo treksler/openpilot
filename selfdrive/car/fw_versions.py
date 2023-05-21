@@ -140,6 +140,11 @@ REQUESTS: List[Request] = [
     [TESTER_PRESENT_REQUEST, SUBARU_VERSION_REQUEST],
     [TESTER_PRESENT_RESPONSE, SUBARU_VERSION_RESPONSE],
   ),
+  Request(
+    "subaru",
+    [SUBARU_VERSION_REQUEST],
+    [SUBARU_VERSION_RESPONSE],
+  ),
   # Volkswagen
   Request(
     "volkswagen",
