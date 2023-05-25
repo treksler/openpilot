@@ -984,10 +984,6 @@ Isso pode levar até um minuto.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Experimental openpilot Longitudinal Control</source>
-        <translation>Controle longitudinal experimental openpilot</translation>
-    </message>
-    <message>
         <source>Disengage on Accelerator Pedal</source>
         <translation>Desacionar com Pedal do Acelerador</translation>
     </message>
