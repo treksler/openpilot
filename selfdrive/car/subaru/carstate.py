@@ -100,7 +100,6 @@ class CarState(CarStateBase):
       self.cruise_state = cp_cam.vl["ES_DashStatus"]["Cruise_State"]
       ret.stockFcw = cp_cam.vl["ES_LKAS_State"]["LKAS_Alert"] == 2
       self.brake_pedal_msg = copy.copy(cp.vl["Brake_Pedal"])
-      self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
       self.es_dashstatus_msg = copy.copy(cp_cam.vl["ES_DashStatus"])
     # FIXME: find ES_Distance signals for CROSSTREK_2020H
     if self.car_fingerprint != CAR.CROSSTREK_2020H:
