@@ -19,3 +19,5 @@ if [ -z "$PASSIVE" ]; then
 fi
 
 export STAGING_ROOT="/data/safe_staging"
+
+export FINGERPRINT="SUBARU OUTBACK 2015 - 2017"
